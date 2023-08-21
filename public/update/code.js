@@ -1,13 +1,42 @@
 // JSONデータの読み込み
 //import data from './test.json' assert { type: 'json' };
 
-const response = await fetch("/tasks/0");
+// const response = await fetch("/tasks");
+// let jsonData = (await response.text());
+
+// const data = JSON.parse(jsonData);
+// console.log(jsonData.length);
+
+//         // プルダウンメニューにオプションを追加
+//         var userSelect = document.getElementById("userSelect");
+//         for (var i = 0; i < data.length; i++) {
+//             var option = document.createElement("option");
+//             option.value = data[i].user;
+//             option.text = data[i].user;
+//             userSelect.appendChild(option);
+//         }
+
+//                 // 変更ボタンにクリックイベントを追加し、func関数を実行
+//                 var changeButton = document.getElementById("changeButton");
+//                 changeButton.addEventListener("click", func);
+        
+//                 // 変更ボタンがクリックされたときに実行される空の関数
+//                 function changePage() {
+//                     Init(1);
+//                 }
+
+Init(1);
+
+async function Init(userID) 
+ {
+const response = await fetch(`/tasks/${userID}`);
 let jsonData = (await response.text());
 
 const data = JSON.parse(jsonData);
 
 console.log(data);
 console.log(jsonData);
+
 // ユーザー情報を表示
 const userNameElement = document.getElementById('userName');
 userNameElement.textContent = data.user;
@@ -25,6 +54,7 @@ data.tasks.forEach((task) => {
   const taskSet = createTaskSet(task);
   taskList.appendChild(taskSet);
 });
+}
 
 // タスクを更新する関数
 function updateTask(taskNumber) {
@@ -62,13 +92,13 @@ function createTaskSet(task) {
   newValueInput.type = 'checkbox';
   newValueInput.classList.add('newValue');
   newValueInput.required = true;
-  newValueInput.checked=true
+  newValueInput.checked=task.isCompleted;
 
   const updateButton = document.createElement('button');
   updateButton.type = 'button';
   updateButton.classList.add('updateButton');
   updateButton.textContent = 'タスク更新';
-  updateButton.addEventListener('click', () => updateTask(task.id));
+  updateButton.addEventListener('click', () => updateTask(task.id+1));
 
   taskSet.appendChild(taskTitle);
   taskSet.appendChild(isCompleted);
