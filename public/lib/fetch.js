@@ -1,6 +1,6 @@
 import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
 
-export const fetchWithDid = async (url, method, options, did, password) => {
+const fetchWithDid = async (url, method, options, did, password) => {
 	const [message, sign] = DIDAuth.genMsgAndSign(did, password, url, method);
 
 	const body = {
