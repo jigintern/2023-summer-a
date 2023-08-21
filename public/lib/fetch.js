@@ -21,9 +21,11 @@ export const fetchWithDid = async (url, method, options, did, password) => {
 	return response;
 };
 
-export const fetchWithDidFromLocalstorage = async (url, method, options) => {
+export const fetchWithDidFromLocalstorage = async (url, options) => {
 	const did = localStorage.getItem('did');
 	const password = localStorage.getItem('password');
+
+	const method = options.method;
 
 	return await fetchWithDid(url, method, options, did, password);
 };
