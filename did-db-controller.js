@@ -1,5 +1,6 @@
 import { Client } from "https://deno.land/x/mysql@v2.11.0/mod.ts";
 import "https://deno.land/std@0.192.0/dotenv/load.ts";
+import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
 
 // SQLの設定
 const connectionParam = {
@@ -31,4 +32,17 @@ export async function getUser(did) {
   // DBからsignatureが一致するレコードを取得
   const res = await client.execute(`select * from users where did = ?;`, [did]);
   return res;
+}
+
+export async function isLoggedIn(req) {
+  const idExists = await checkIfIdExists(req["did"]);
+  const isVerified = DIDAuth.verifySign(req["did"], req["sign"], req["message"]);
+  let userName = undefined;
+
+  if (idExists && isVerified) {
+    userName = await getUser(did);
+  } else {
+    userName = false;
+  }
+  return idExists, userName;
 }
