@@ -25,7 +25,13 @@
 //                     Init(1);
 //                 }
 
-Init(1);
+if(getParam('userID')){
+Init(getParam('userID'));
+}else
+{
+    const updateResult = document.getElementById('updateResult');
+    updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
+}
 
 async function Init(userID) 
  {
@@ -107,4 +113,14 @@ function createTaskSet(task) {
   taskSet.appendChild(updateButton);
 
   return taskSet;
+}
+
+function getParam(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
