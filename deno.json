@@ -4,7 +4,7 @@
 	  "testing/": "https://deno.land/std@0.193.0/testing/"
 	},
 	"tasks": {
-	  "start": "deno run --watch --allow-net --allow-read server.ts",
+	  "start": "deno run --watch -A server.deno.js",
 	  "mock": "deno run --watch --allow-net --allow-read mock.server.ts"
 	},
 	"compilerOptions": {

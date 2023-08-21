@@ -25,7 +25,7 @@ export async function checkIfIdExists(did) {
 
 export async function addDID(did, userName) {
   // DBにDIDとuserNameを追加
-  await client.execute(`insert into users (did, name) values (?, ?);`, [did, userName]);
+  await client.execute(`insert into users (did, user_name) values (?, ?);`, [did, userName]);
 }
 
 export async function getUser(did) {
@@ -40,7 +40,8 @@ export async function isLoggedIn(req) {
   let userName = undefined;
 
   if (idExists && isVerified) {
-    userName = await getUser(did);
+    res = await getUser(did);
+    userName = res.rows[0].user_name;
   } else {
     userName = false;
   }
