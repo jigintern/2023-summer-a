@@ -21,7 +21,7 @@ const taskListMock: Tasks[] = [
         {
             id: 1,
             user: "ooi",
-            completed: 95.4,
+            completed: 95,
             tasks: [ // あとで実装するかも
                 {
                     id: 0,
@@ -31,7 +31,7 @@ const taskListMock: Tasks[] = [
                 {
                     id: 1,
                     name: "漢字どりる80ページまで",
-                    isCompleted: false
+                    isCompleted: true
                 },
             ]
         },
