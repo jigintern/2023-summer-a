@@ -20,3 +20,10 @@ export const fetchWithDid = async (url, method, options, did, password) => {
 
 	return response;
 };
+
+export const fetchWithDidFromLocalstorage = async (url, method, options) => {
+	const did = localStorage.getItem('did');
+	const password = localStorage.getItem('password');
+
+	return await fetchWithDid(url, method, options, did, password);
+};
