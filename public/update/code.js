@@ -25,8 +25,9 @@
 //                     Init(1);
 //                 }
 
-if(getParam('userID')){
-Init(getParam('userID'));
+let userID=getParam('userID');
+if(userID){
+Init(userID);
 }else
 {
     const updateResult = document.getElementById('updateResult');
