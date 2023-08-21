@@ -79,7 +79,7 @@ serve(async (req) => {
         headers: { "Content-Type": "application/json" },
       });
     } catch (e) {
-      return new Response(e.message, { status: 500 });
+      return new Response(e.message, { status: 503 });
     }
   }
 
