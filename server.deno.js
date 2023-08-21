@@ -74,7 +74,7 @@ serve(async (req) => {
       }
       // 登録済みであればuser情報を返す
       const res = await getUser(did);
-      const user = { did: res.rows[0].did, name: res.rows[0].name };
+      const user = { did: res.rows[0].did, userName: res.rows[0].user_name };
       return new Response(JSON.stringify({ user }), {
         headers: { "Content-Type": "application/json" },
       });
