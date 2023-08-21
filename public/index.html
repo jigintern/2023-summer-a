@@ -20,7 +20,8 @@
     </style>
     <script type="module">
       const message = await fetch("/welcome-message")
-      document.querySelector("body").innerHTML = `<h1>${await message.text()}</h1>`
+      document.querySelector("body").innerHTML = `<h1>${await message.text()}</h1>    <a href="/update">アップデート画面</a>`
+      
     </script>
   </head>
   <body>
