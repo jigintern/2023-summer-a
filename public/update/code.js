@@ -25,7 +25,7 @@
 //                     Init(1);
 //                 }
 
-let userID=getParam('userID');
+const userID=getParam('userID');
 if(userID){
 Init(userID);
 }else
