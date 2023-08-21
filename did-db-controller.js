@@ -40,7 +40,8 @@ export async function isLoggedIn(req) {
   let userName = undefined;
 
   if (idExists && isVerified) {
-    userName = await getUser(did);
+    res = await getUser(did);
+    userName = res.rows[0].user_name;
   } else {
     userName = false;
   }
