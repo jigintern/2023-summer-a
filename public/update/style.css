@@ -1,0 +1,44 @@
+/* タスクセットのスタイル */
+.taskSet {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  /* ラベルとテキストボックスのスタイル */
+  label {
+    font-weight: bold;
+  }
+  
+  .newValue {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+  }
+  
+  /* 更新ボタンのスタイル */
+  .updateButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .updateButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* 更新結果のスタイル */
+  #updateResult {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  progress {
+    width: 100%;
+  }
+  

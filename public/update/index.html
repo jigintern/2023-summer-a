@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>タスク更新</title>
+
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+  </head>
+  <body>
+    <h1>タスク更新フォーム</h1>
+
+    <!-- <label for="userSelect">ユーザーを選択してください:</label>
+    <select id="userSelect">
+    </select>
+    <button id="changeButton">変更</button> -->
+
+
+    <h2>ユーザー: <span id="userName"></span></h2>
+
+    <!-- ユーザーの進捗をプログレスバーで表示 -->
+    <progress id="userProgress" max="100"></progress>
+    <h2>進捗:<span id="progressValue"></span>%</h2>
+
+    <!-- タスク一覧の表示 -->
+    <div id="taskList"></div>
+
+    <!-- 更新結果を表示するエリア -->
+    <p id="updateResult"></p>
+
+    <script type="module" src="./code.js"></script>
+  </body>
+</html>
