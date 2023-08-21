@@ -1,6 +1,13 @@
 // JSONデータの読み込み
-import data from './test.json' assert { type: 'json' };
+//import data from './test.json' assert { type: 'json' };
 
+const response = await fetch("/tasks/0");
+let jsonData = (await response.text());
+
+const data = JSON.parse(jsonData);
+
+console.log(data);
+console.log(jsonData);
 // ユーザー情報を表示
 const userNameElement = document.getElementById('userName');
 userNameElement.textContent = data.user;
@@ -8,6 +15,9 @@ userNameElement.textContent = data.user;
 // ユーザーの進捗をプログレスバーで表示
 const userProgress = document.getElementById('userProgress');
 userProgress.value = data.completed;
+
+const progressValue=document.getElementById('progressValue');
+progressValue.textContent = String(data.completed);
 
 // JSONデータからタスクを動的に生成
 const taskList = document.getElementById('taskList');
@@ -39,11 +49,11 @@ function createTaskSet(task) {
 
   const taskTitle = document.createElement('p');
   taskTitle.classList.add('taskTitle');
-  taskTitle.textContent = `タスク${task.id}: ${task.taskName}`;
+  taskTitle.textContent = `タスク${task.id}: ${task.name}`;
 
-  const completed = document.createElement('p');
-  completed.classList.add('completed');
-  completed.textContent = task.completed ? '完了済み' : '未完了';
+  const isCompleted = document.createElement('p');
+  isCompleted.classList.add('isCompleted');
+  isCompleted.textContent = task.isCompleted ? '完了済み' : '未完了';
 
   const label = document.createElement('label');
   label.textContent = '新しい値:';
@@ -52,6 +62,7 @@ function createTaskSet(task) {
   newValueInput.type = 'checkbox';
   newValueInput.classList.add('newValue');
   newValueInput.required = true;
+  newValueInput.checked=true
 
   const updateButton = document.createElement('button');
   updateButton.type = 'button';
@@ -60,7 +71,7 @@ function createTaskSet(task) {
   updateButton.addEventListener('click', () => updateTask(task.id));
 
   taskSet.appendChild(taskTitle);
-  taskSet.appendChild(completed);
+  taskSet.appendChild(isCompleted);
   taskSet.appendChild(label);
   taskSet.appendChild(newValueInput);
   taskSet.appendChild(updateButton);

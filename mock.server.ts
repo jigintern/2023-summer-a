@@ -1,7 +1,7 @@
 // https://deno.land/std@0.194.0/http/server.ts?s=serve
-import { serve } from 'http/server.ts'
+import { serve } from 'https://deno.land/std@0.194.0/http/server.ts?s=serve'
 // https://deno.land/std@0.194.0/http/file_server.ts?s=serveDir
-import { serveDir } from 'http/file_server.ts'
+import { serveDir } from 'https://deno.land/std@0.194.0/http/file_server.ts?s=serveDir'
 
 import { taskListMock, tasksMockUser0, tasksMockUser1 } from "./mock/mock.ts";
 
