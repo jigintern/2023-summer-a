@@ -37,3 +37,19 @@ export class TaskDb implements TaskModel {
 
 		return {rows: task.rows} as ExecuteResult;
 	}
+
+	// タスクのcompletedを更新する
+	public async updateTask(userId: number, taskId: number, isCompleted: boolean): Promise<ExecuteResult> {
+		const task = await this.db.execute(`UPDATE user_tasks SET is_completed = ? WHERE Task_id = ? AND user_id = ?`, [
+			isCompleted,
+			taskId,
+			userId,
+		]);
+
+		if (!task.rows || task.rows.length === 0) {
+			return {rows: []};
+		}
+
+		return {rows: task.rows} as ExecuteResult;
+	}
+}
