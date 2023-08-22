@@ -10,3 +10,9 @@ export class TaskControllerImpl implements TaskController{
 	constructor(private taskModel: TaskModel) {
 		this.taskModel = taskModel;
 	}
+
+	public async updateTask(userId: number, TaskId: number, isCompleted: boolean): Promise<string> {
+		const task = await this.taskModel.updateTask(userId, TaskId, isCompleted);
+		return JSON.stringify(task);
+	}
+}
