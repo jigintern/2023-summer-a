@@ -13,9 +13,11 @@ async function Init(userID)
     const response = await fetch(`/tasks/${userID}`);
     let jsonData = (await response.text());
 
-    const data = JSON.parse(jsonData);
+    const userData = JSON.parse(jsonData);
+    console.log(userData);
+
+    const data=userData[`tasksMockUser${userID}`];
     console.log(data);
-    console.log(jsonData);
 
     // ユーザー情報を表示
     const userNameElement = document.getElementById('userName');
