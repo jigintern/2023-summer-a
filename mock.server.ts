@@ -47,6 +47,18 @@ serve(async (req) => {
 		});
 	}
 
+	if(req.method === "GET" && pathname === "/error"){
+		const res = new Response("Error", {
+			status: 500,
+			headers: {
+				"content-type": "text/plain",
+			},
+		});
+		console.log(res);
+		return res;
+	}
+
+
 
 
 	return serveDir(req, {
