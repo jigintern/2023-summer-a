@@ -48,8 +48,9 @@ serve(async (req) => {
 	}
 
 	if(req.method === "GET" && pathname === "/error"){
-		const res = new Response("Error", {
-			status: 500,
+		const body = {message: "認証されていません"};
+		const res = new Response(JSON.stringify(body), {
+			status: 403,
 			headers: {
 				"content-type": "text/plain",
 			},
