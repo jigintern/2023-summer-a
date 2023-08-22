@@ -12,3 +12,13 @@ export class TaskDb implements TaskModel {
 	constructor(private db: Client) {
 		this.db = db;
 	}
+
+	public async getAllTasks(): Promise<ExecuteResult> {
+		const userTasks = await this.db.execute(`SELECT * FROM user_tasks LEFT JOIN tasks ON user_tasks.Task_id = tasks.id;`);
+
+		if (!userTasks.rows || userTasks.rows.length === 0) {
+			return {rows: []};
+		}
+		
+		return {rows: userTasks.rows} as ExecuteResult;
+	}
