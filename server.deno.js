@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.151.0/http/server.ts";
 import { serveDir } from "https://deno.land/std@0.151.0/http/file_server.ts";
 import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
-import { addDID, checkIfIdExists, getUser } from "./did-db-controller.js";
+import { addDID, checkIfIdExists, getUser, isLoggedIn } from "./did-db-controller.js";
 
 serve(async (req) => {
   const pathname = new URL(req.url).pathname;
@@ -10,6 +10,19 @@ serve(async (req) => {
   // リクエスト(テスト)
   if (req.method === "GET" && pathname === "/welcome-message") {
     return new Response("jigインターンへようこそ！");
+  }
+
+  // ログインテスト
+  if (req.method === "POST" && pathname === "/logintest") {
+    const { loggedIn, loginUserInfo } = await isLoggedIn(req);
+    if (loggedIn) {
+      const userId = loginUserInfo.userId;
+      const userName = loginUserInfo.userName;
+      const did = loginUserInfo.did;
+      return new Response("（エンドポイント/logintestからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId);
+    } else {
+      return new Response("まだログインしていません.");
+    }
   }
 
   // リクエスト(ユーザ登録)
