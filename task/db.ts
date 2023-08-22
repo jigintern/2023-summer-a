@@ -22,3 +22,18 @@ export class TaskDb implements TaskModel {
 		
 		return {rows: userTasks.rows} as ExecuteResult;
 	}
+
+
+	public async getUserTasks(userId: number): Promise<ExecuteResult> {
+		// user_tasksテーブルとtasksテーブルを結合して、user_idが一致するものを取得する
+		const task = await this.db.execute(
+			`SELECT * FROM user_tasks LEFT JOIN tasks ON user_tasks.Task_id = tasks.id WHERE user_tasks.user_id = ?`,
+			 [userId]
+			);
+
+		if (!task.rows || task.rows.length === 0) {
+			return {rows: []};
+		}
+
+		return {rows: task.rows} as ExecuteResult;
+	}
