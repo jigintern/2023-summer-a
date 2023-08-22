@@ -1,4 +1,59 @@
-table, td, th {
-    border: 1px #000000 solid;
+body, h1, h2, h3, p, ul, li {
+    margin: 0;
+    padding: 0;
+}
+  
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+}
+  
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+  
+button:hover {
+    background-color: #0056b3;
+}
+  
+#contents {
+    margin-top: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+  
+table {
+    width: 100%;
     border-collapse: collapse;
+}
+  
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+  
+th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+  
+td:last-child {
+    display: flex;
+    align-items: center;
+}
+  
+progress {
+    width: 100%;
+    flex: 1;
+    margin-left: 10px;
 }
