@@ -13,7 +13,7 @@ async function load(){
         table+="<tr>";
         table+="<td>"+json[i].id+"</td>"+
         "<td>"+json[i].user+"</td>"+
-        "<td>"+json[i].completed+"</td>";
+        "<td>"+json[i].completed+"%"+"<progress max=\"100\" value="+json[i].completed+"></progress></td>";
         table+="</tr>";
     }
     table+="</tbody>"
