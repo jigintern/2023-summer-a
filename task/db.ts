@@ -6,3 +6,9 @@ export interface TaskModel {
 	getUserTasks(userId: number): Promise<ExecuteResult>;
 	updateTask(userId: number, taskId: number, isCompleted: boolean): Promise<ExecuteResult>;
 }
+
+// dbからデータを取得する
+export class TaskDb implements TaskModel {
+	constructor(private db: Client) {
+		this.db = db;
+	}
