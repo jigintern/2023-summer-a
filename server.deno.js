@@ -79,7 +79,8 @@ serve(async (req) => {
         return new Response("不正な電子署名です", { status: 400 });
       }
     } catch (e) {
-      return new Response(e.message, { status: 500 });
+      console.error(e);
+      return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
     }
 
     try {
@@ -89,7 +90,8 @@ serve(async (req) => {
         return Response("登録済みです", { status: 400 });
       }
     } catch (e) {
-      return new Response(e.message, { status: 500 });
+      console.error(e);
+      return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
     }
 
     try {
@@ -97,7 +99,8 @@ serve(async (req) => {
       await addDID(did, userName);
       return new Response("ok");
     } catch (e) {
-      return new Response(e.message, { status: 500 });
+      console.error(e);
+      return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
     }
   }
 
@@ -131,7 +134,8 @@ serve(async (req) => {
         headers: { "Content-Type": "application/json" },
       });
     } catch (e) {
-      return new Response(e.message, { status: 500 });
+      console.error(e);
+      return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
     }
   }
 
