@@ -31,41 +31,36 @@ async function Init(userID)
     progressValue.textContent = String(data.completed);
 
     // JSONデータからタスクを動的に生成
-    const taskList = document.getElementById('taskList');
+    const taskList = document.getElementById('completedtTaskList');
     data.tasks.forEach((task) => {
       const taskSet = createTaskSet(task);
       taskList.appendChild(taskSet);
     });
 }
 
-// タスクセットを生成する関数
 function createTaskSet(task) {
   const taskSet = document.createElement('div');
-  taskSet.classList.add('taskSet');
+  taskSet.classList.add('box'); 
 
   const taskTitle = document.createElement('p');
-  taskTitle.classList.add('taskTitle');
-  taskTitle.textContent = `タスク${task.id}: ${task.name}`;
+  taskTitle.classList.add('title');
+  taskTitle.textContent = `${task.id}: ${task.name}`;
 
-  const isCompleted = document.createElement('p');
-  isCompleted.classList.add('isCompleted');
-  isCompleted.textContent = task.isCompleted ? '完了済み' : '未完了';
+  const newValue = document.createElement('input');
+  newValue.type = 'checkbox';
+  newValue.id = `cb${task.id}`;
+  newValue.required = true;
+  newValue.checked = task.isCompleted;
 
-  const label = document.createElement('label');
-  label.textContent = '新しい値:';
+  const customCheckBox = document.createElement('label');
+  customCheckBox.setAttribute('for', `cb${task.id}`);
+  customCheckBox.classList.add('check-box');
 
-  const newValueInput = document.createElement('input');
-  newValueInput.type = 'checkbox';
-  newValueInput.classList.add('newValue');
-  newValueInput.required = true;
-  newValueInput.checked=task.isCompleted;
-
+  taskSet.appendChild(newValue);
+  taskSet.appendChild(customCheckBox);
   taskSet.appendChild(taskTitle);
-  taskSet.appendChild(isCompleted);
-  taskSet.appendChild(label);
-  taskSet.appendChild(newValueInput);
 
-  newValueInput.addEventListener('change', () => checkBoxChanged(task.id+1));
+  newValue.addEventListener('change', () => checkBoxChanged(task.id + 1));
 
   return taskSet;
 }
@@ -84,13 +79,8 @@ function getParam(name, url) {
 // タスクのチェックボックスが変更されたときに実行される関数
 async function checkBoxChanged(taskNumber) {
     // タスク内容の取得
-    const taskContent = document.querySelector(
-      `.taskSet:nth-child(${taskNumber}) .taskTitle`
-    ).textContent;
-  
-    const newValue = document.querySelector(
-      `.taskSet:nth-child(${taskNumber}) .newValue`
-    ).checked;
+    const taskContent = document.querySelector(`#cb${taskNumber-1}`).nextSibling.textContent;
+    const newValue = document.querySelector(`#cb${taskNumber-1}`).checked;
   
     // 更新結果を表示するエリアにメッセージを表示
     const updateResult = document.getElementById('updateResult');
