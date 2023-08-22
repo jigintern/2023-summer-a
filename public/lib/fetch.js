@@ -28,6 +28,8 @@ export const fetchWithDidFromLocalstorage = async (url, options) => {
   const password = localStorage.getItem("password");
 
   if (did == null || password == null) {
+    // localStorageにdidパラメータもしくはpasswordパラメータが無い場合
+    // そもそもHTTP通信をしていないがResponseを返すことに注意
     console.log("No DID or no password saved in LocalStorage!");
     const body = {
       message: "ログインが必要です．",
