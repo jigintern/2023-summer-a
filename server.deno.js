@@ -15,43 +15,52 @@ serve(async (req) => {
 
   // ログインテスト
   if (req.method === "POST" && pathname === "/logintest") {
+    let loggedIn, loginUserInfo;
     try {
-      const { loggedIn, loginUserInfo } = await isLoggedIn(req);
-      if (!loggedIn) {
-        // isLoggedInが未ログインと判断した場合の処理
-        // 検証に必要なデータがリクエストに含まれるか，DIDの登録，署名の検証，の3工程をまとめたエラーとなっているため注意
-        return new Response("リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．", { status: 400 });
-      } else {
-        // 以下，ログインができている場合の処理
-        const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
-        return new Response(
-          JSON.stringify({ message: "（エンドポイント/logintestからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId })
-        );
-      }
+      ({ loggedIn, loginUserInfo } = await isLoggedIn(req)); // 分割代入
     } catch (e) {
-      return new Response(e.message, { status: 500 });
+      console.error(e);
+      return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
+    }
+
+    if (!loggedIn) {
+      // isLoggedInが未ログインと判断した場合の処理
+      // 検証に必要なデータがリクエストに含まれるか，DIDの登録，署名の検証，の3工程をまとめたエラーとなっているため注意
+      return new Response(
+        JSON.stringify({ message: "リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．" }),
+        { status: 400 }
+      );
+    } else {
+      // 以下，ログインができている場合の処理
+      const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
+      return new Response(
+        JSON.stringify({ message: "（エンドポイント/logintestからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId })
+      );
     }
   }
 
-  // ログインテスト
+  // タスクの一覧を要求されたとき
   if (req.method === "POST" && pathname === "/tasks") {
+    let loggedIn, loginUserInfo;
     try {
-      const { loggedIn, loginUserInfo } = await isLoggedIn(req);
-      if (!loggedIn) {
-        // isLoggedInが未ログインと判断した場合の処理
-        // 検証に必要なデータがリクエストに含まれるか，DIDの登録，署名の検証，の3工程をまとめたエラーとなっているため注意
-        return new Response("リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．", { status: 400 });
-      } else {
-        // 以下，ログインができている場合の処理
-        const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
-        return new Response(JSON.stringify({ userId, taskListMock }), {
-          headers: {
-            "content-type": "application/json",
-          },
-        });
-      }
+      ({ loggedIn, loginUserInfo } = await isLoggedIn(req)); // 分割代入
     } catch (e) {
-      return new Response(e.message, { status: 500 });
+      console.error(e);
+      return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
+    }
+
+    if (!loggedIn) {
+      return new Response(
+        JSON.stringify({ message: "リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．" }),
+        { status: 400 }
+      );
+    } else {
+      const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
+      return new Response(JSON.stringify({ userId, taskListMock }), {
+        headers: {
+          "content-type": "application/json",
+        },
+      });
     }
   }
 
