@@ -54,7 +54,7 @@ document.getElementById("load").onclick = async () => {
   }
 };
 
-document.getElementById("logout").onclick = async () => {
+document.getElementById("logout").onclick = () => {
   localStorage.clear();
   location.href = "/";
 };
