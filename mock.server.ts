@@ -52,7 +52,7 @@ serve(async (req) => {
 		const res = new Response(JSON.stringify(body), {
 			status: 403,
 			headers: {
-				"content-type": "text/plain",
+				"content-type": "application/json",
 			},
 		});
 		console.log(res);
