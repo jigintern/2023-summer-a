@@ -10,7 +10,8 @@ serve(async (req) => {
 	console.log(pathname);
 
 	if (req.method === "GET" && pathname === "/tasks") {
-		return new Response(JSON.stringify(taskListMock), {
+		const userId = 1;
+		return new Response(JSON.stringify({userId,taskListMock}), {
 			headers: {
 				"content-type": "application/json",
 			},
@@ -18,7 +19,8 @@ serve(async (req) => {
 	}
 
 	if (req.method === "GET" && pathname === "/tasks/0") {
-		return new Response(JSON.stringify(tasksMockUser0), {
+		const userId = 0
+		return new Response(JSON.stringify({userId,tasksMockUser0}), {
 			headers: {
 				"content-type": "application/json",
 			},
@@ -26,7 +28,8 @@ serve(async (req) => {
 	}
 
 	if (req.method === "GET" && pathname === "/tasks/1") {
-		return new Response(JSON.stringify(tasksMockUser1), {
+		const userId = 1
+		return new Response(JSON.stringify({userId,tasksMockUser1}), {
 
 			headers: {
 				"content-type": "application/json",
