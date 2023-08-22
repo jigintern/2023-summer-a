@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.151.0/http/server.ts";
 import { serveDir } from "https://deno.land/std@0.151.0/http/file_server.ts";
 import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
 import { addDID, checkIfIdExists, getUser, isLoggedIn } from "./did-db-controller.js";
+import { taskListMock } from "./mock/mock.ts";
 
 serve(async (req) => {
   const pathname = new URL(req.url).pathname;
@@ -23,7 +24,31 @@ serve(async (req) => {
       } else {
         // 以下，ログインができている場合の処理
         const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
-        return new Response("（エンドポイント/logintestからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId);
+        return new Response(
+          JSON.stringify({ message: "（エンドポイント/logintestからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId })
+        );
+      }
+    } catch (e) {
+      return new Response(e.message, { status: 500 });
+    }
+  }
+
+  // ログインテスト
+  if (req.method === "POST" && pathname === "/tasks") {
+    try {
+      const { loggedIn, loginUserInfo } = await isLoggedIn(req);
+      if (!loggedIn) {
+        // isLoggedInが未ログインと判断した場合の処理
+        // 検証に必要なデータがリクエストに含まれるか，DIDの登録，署名の検証，の3工程をまとめたエラーとなっているため注意
+        return new Response("リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．", { status: 400 });
+      } else {
+        // 以下，ログインができている場合の処理
+        const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
+        return new Response(JSON.stringify({ userId, taskListMock }), {
+          headers: {
+            "content-type": "application/json",
+          },
+        });
       }
     } catch (e) {
       return new Response(e.message, { status: 500 });
