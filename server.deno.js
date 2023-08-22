@@ -14,12 +14,12 @@ serve(async (req) => {
 
   // ログインテスト
   if (req.method === "POST" && pathname === "/logintest") {
-    const loggedIn = await isLoggedIn(req);
+    const { loggedIn, loginUserInfo } = await isLoggedIn(req);
     if (loggedIn) {
-      const did = loggedIn;
-      const resFromDB = await getUser(did);
-      const userName = resFromDB.rows[0].user_name;
-      return new Response("（エンドポイント/logintestからの応答）あなたはログインに成功しています．ユーザ名: " + userName);
+      const userId = loginUserInfo.userId;
+      const userName = loginUserInfo.userName;
+      const did = loginUserInfo.did;
+      return new Response("（エンドポイント/logintestからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId);
     } else {
       return new Response("まだログインしていません.");
     }

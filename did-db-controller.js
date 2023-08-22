@@ -28,27 +28,38 @@ export async function getUser(did) {
   return res;
 }
 
-// リクエストを解析し，ログイン中であるかどうかを返す．戻値はdidかfalseとする
+// ログインの確認を行い，正常であればユーザ情報を返す．
+// 戻値 ... loggedIn: Boolean, loginUserInfo: Object
 export async function isLoggedIn(req) {
   const json = await req.json();
   const [did, sign, message] = [json.did, json.sign, json.message];
 
   if (did == null || sign == null || message == null) {
     console.log("No did, sign, or message provided.");
-    return false;
+    return { loggedIn: false, loginUserInfo: new Object() };
   }
 
   const idExists = await checkIfIdExists(did);
   if (!idExists) {
     console.log("DID, sign, and message were provided but the DID is not exist on DB.");
-    return false;
+    return { loggedIn: false, loginUserInfo: new Object() };
   }
 
   const isVerified = DIDAuth.verifySign(did, sign, message);
   if (!isVerified) {
     console.log("DID, sign, and message were provided and the DID is on DB, but verifySign failed!");
-    return false;
+    return { loggedIn: false, loginUserInfo: new Object() };
   }
 
-  return did;
+  // ここまでくれば送信者はデータベースに存在し，reqは正しいリクエストである
+  const res = await getUser(did);
+  const userId = res.rows[0].user_id;
+  const userName = res.rows[0].user_name;
+
+  const loginUserInfo = {
+    userId: userId,
+    userName: userName,
+    did: did,
+  };
+  return { loggedIn: true, loginUserInfo: loginUserInfo };
 }
