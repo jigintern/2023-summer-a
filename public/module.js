@@ -14,9 +14,18 @@ window.onload = async () => {
       elem.innerText = "ログインしていません．";
     } else if (!res.ok) {
       // サーバーから成功ステータスが返ってこない場合
-      const errMsg = await res.text();
-      elem.innerText = "エラー：" + errMsg;
-      console.log(errMsg);
+      console.log(res);
+      if (res.status == 303) {
+        // localStorageにアカウント情報がない場合，303が返ってくるのでリダイレクト
+        const json = await res.json();
+        alert(json.message);
+        location.href = json.redirectURL; // リダイレクト
+        return; // reqのbodyを2回読んでしまう心配は恐らくないが一応．
+      } else {
+        const errMsg = await res.text();
+        elem.innerText = "エラー：" + errMsg;
+        console.log(errMsg);
+      }
     } else {
       // 成功の応答が返ってきた場合
       elem.innerText = await res.text();

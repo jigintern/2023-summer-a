@@ -22,14 +22,23 @@ const fetchWithDid = async (url, method, options, did, password) => {
 };
 
 // 引数はエンドポイント(String)，オプション(Object)
-// 戻値は，localStorageに必要な変数がなければnull，そうでなければResponse
+// 戻値はResponseで統一．
 export const fetchWithDidFromLocalstorage = async (url, options) => {
   const did = localStorage.getItem("did");
   const password = localStorage.getItem("password");
 
   if (did == null || password == null) {
     console.log("No DID or no password saved in LocalStorage!");
-    return null;
+    const body = {
+      message: "ログインが必要です．",
+      redirectURL: "/login",
+    };
+    return new Response(JSON.stringify(body), {
+      status: 303,
+      headers: {
+        "content-type": "application/json",
+      },
+    });
   }
 
   const method = options.method;
