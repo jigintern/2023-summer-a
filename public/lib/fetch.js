@@ -23,6 +23,7 @@ const fetchWithDid = async (url, method, options, did, password) => {
 
 // 引数はエンドポイント(String)，オプション(Object)
 // 戻値はResponseで統一．
+// NOTE: fetchWithDidFromLocalstorageはメッセージボディ(json形式)を含むリクエストのため，GETを使うことができない.
 export const fetchWithDidFromLocalstorage = async (url, options) => {
   const did = localStorage.getItem("did");
   const password = localStorage.getItem("password");
