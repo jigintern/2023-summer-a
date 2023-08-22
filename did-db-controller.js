@@ -1,15 +1,8 @@
 import { Client } from "https://deno.land/x/mysql@v2.11.0/mod.ts";
-import "https://deno.land/std@0.192.0/dotenv/load.ts";
 import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
 
-// SQLの設定
-const connectionParam = {
-  hostname: Deno.env.get("HOST_NAME"),
-  username: Deno.env.get("SQL_USER"),
-  password: Deno.env.get("SQL_PASSWORD"),
-  db: Deno.env.get("DATABASE"),
-  port: Number(Deno.env.get("PORT")),
-};
+import { connectionParam } from "./env.ts";
+
 
 // クライアントの作成
 const client = await new Client().connect(connectionParam);
@@ -25,7 +18,7 @@ export async function checkIfIdExists(did) {
 
 export async function addDID(did, userName) {
   // DBにDIDとuserNameを追加
-  await client.execute(`insert into users (did, name) values (?, ?);`, [did, userName]);
+  await client.execute(`insert into users (did, user_name) values (?, ?);`, [did, userName]);
 }
 
 export async function getUser(did) {
@@ -40,7 +33,8 @@ export async function isLoggedIn(req) {
   let userName = undefined;
 
   if (idExists && isVerified) {
-    userName = await getUser(did);
+    res = await getUser(did);
+    userName = res.rows[0].user_name;
   } else {
     userName = false;
   }
