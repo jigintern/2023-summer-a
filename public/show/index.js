@@ -63,6 +63,7 @@ async function load(){
         tbody+="</tr>";
     }
     document.getElementById("tbody").innerHTML=tbody;
+    initInfo();
 }
 
 document.querySelectorAll('th').forEach(elm => {
@@ -107,7 +108,6 @@ function compareString(a, b) {
 	} else {
 		return 1;
 	}
-	return 0;
 }
 
 //％ソート (降順)
@@ -115,3 +115,15 @@ function comparePercentDesc(a, b)
 {
 	return b.value.split('%')[0] - a.value.split('%')[0];
 }
+
+function initInfo(){
+    document.querySelectorAll('td').forEach(elm => {
+        elm.onclick = function() {
+            document.getElementById("modal").style.display = "block";
+        };
+    });
+}
+
+document.getElementById("modal").addEventListener("click", (e) =>{
+    e.target.style.display="none";
+});
