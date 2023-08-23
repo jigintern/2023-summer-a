@@ -1,4 +1,13 @@
+const completedtTaskList = document.getElementById('completedtTaskList');
+const uncompletedtTaskList = document.getElementById('uncompletedtTaskList');
+const progressValue=document.getElementById('progressValue');
+const userProgress = document.getElementById('userProgress');
+const userNameElement = document.getElementById('userName');
+
 const userID=getParam('userID');
+
+const data = JSON.parse(await (await fetch(`/tasks/${userID}`)).text());
+const userData=data[`tasksMockUser${userID}`];
 
 if(userID){
     Init(userID);
@@ -8,36 +17,37 @@ if(userID){
     updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
 }
 
-async function Init(userID) 
+//タスクの初期化
+function Init() 
  {
-    const response = await fetch(`/tasks/${userID}`);
-    let jsonData = (await response.text());
-
-    const userData = JSON.parse(jsonData);
     console.log(userData);
 
-    const data=userData[`tasksMockUser${userID}`];
-    console.log(data);
+    userNameElement.textContent = userData.user;
+    userProgress.value = userData.completed;
+    progressValue.textContent = String(userData.completed);
 
-    // ユーザー情報を表示
-    const userNameElement = document.getElementById('userName');
-    userNameElement.textContent = data.user;
+    clearTaskList(completedtTaskList);
+    clearTaskList(uncompletedtTaskList);
 
-    // ユーザーの進捗をプログレスバーで表示
-    const userProgress = document.getElementById('userProgress');
-    userProgress.value = data.completed;
-
-    const progressValue=document.getElementById('progressValue');
-    progressValue.textContent = String(data.completed);
 
     // JSONデータからタスクを動的に生成
-    const taskList = document.getElementById('completedtTaskList');
-    data.tasks.forEach((task) => {
+    userData.tasks.forEach((task) => {
       const taskSet = createTaskSet(task);
-      taskList.appendChild(taskSet);
+      if(task.isCompleted)
+       completedtTaskList.appendChild(taskSet);
+      else
+      uncompletedtTaskList.appendChild(taskSet);
     });
 }
 
+//タスクの子を削除する
+function clearTaskList(element) {
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
+}
+
+//タスクを作る関数
 function createTaskSet(task) {
   const taskSet = document.createElement('div');
   taskSet.classList.add('box'); 
@@ -62,14 +72,14 @@ function createTaskSet(task) {
 
   newValue.addEventListener('change', () => checkBoxChanged(task.id + 1));
 
-  return taskSet;
+  return (taskSet);
 }
 
 //パラメーターを取得する関数
 function getParam(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
@@ -78,6 +88,7 @@ function getParam(name, url) {
 
 // タスクのチェックボックスが変更されたときに実行される関数
 async function checkBoxChanged(taskNumber) {
+
     // タスク内容の取得
     const taskContent = document.querySelector(`#cb${taskNumber-1}`).nextSibling.textContent;
     const newValue = document.querySelector(`#cb${taskNumber-1}`).checked;
@@ -86,14 +97,18 @@ async function checkBoxChanged(taskNumber) {
     const updateResult = document.getElementById('updateResult');
     updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
 
+    //PUTリクエストを送信
     const response = await fetch("/test",{
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({id:taskNumber-1,isCompleted:newValue})
       });
 
-    const res= await response.text()
+    const res = await response.text()
     document.getElementById("server_response").textContent = res;
-    console.log(res);
+
+    //保存していたjsonファイルの内容の書き換え
+    userData.tasks[taskNumber-1].isCompleted=newValue;
+    Init(userID);
   }
   

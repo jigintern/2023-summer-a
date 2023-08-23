@@ -10,27 +10,40 @@
     <link rel="stylesheet" type="text/css" href="./style.css" />
   </head>
   <body>
-    <a href="/show" class="button is-link user-list-button"><h3>ユーザー一覧へ</h3></a>
-    <h1 class="title">タスク更新フォーム</h1>
 
-    <div class="submenu column is-3">
-    <h2 class="subtitle">ユーザー: <span id="userName"></span></h2>
-    <h2 class="subtitle">進捗:<span id="progressValue"></span>%</h2>
-  </div>
+     <!-- 上のヘッダー部分 -->
+    <div class="hero is-info is-bold">
+      <div class="hero-body">
+          <div class="container">
+             <h1 class="title">タスク更新</h1>
+             <h2 class="subtitle">ユーザー: <span id="userName"></span></h2>
+          </div>
+      </div>
+   </div>
 
-    <!-- ユーザーの進捗をプログレスバーで表示 -->
+    </header> 
 
-    <progress id="userProgress" class="progress is-primary" max="100"></progress>
+    <!-- 進捗とプログレスバーの表示 -->
+    <div class="container">
+      <div class="notification">
+        <a href="/show" class="button is-link user-list-button is-pulled-right"><h3>ユーザー一覧へ</h3></a>
+        <h2 class="subtitle" style="margin-top: 20px;">進捗:<span id="progressValue"></span>%</h2>
+        <progress id="userProgress" class="progress is-primary" max="100"></progress>
+      </div>
+    </div>    
 
     <!-- タスク一覧の表示 -->
-    <details>
-      <summary>完了済み</summary>
-        <div id="completedtTaskList" class="box"></div>
-  </details>
-  <details>
-    <summary>未完了</summary>
-    <div id="uncompletedtTaskList" class="box"></div>
-</details>
+  <div class="container">
+    <section class="section">
+      <details open>
+        <summary>未完了</summary>
+        <div id="uncompletedtTaskList" class="box"></div>
+    </details>
+      <details open>
+        <summary>完了済み</summary>
+          <div id="completedtTaskList" class="box"></div>
+    </details>
+</div>
 
     <!-- 更新結果を表示するエリア -->
     <p id="updateResult"></p>
@@ -38,5 +51,5 @@
     <p id="server_response"></p>
 
     <script type="module" src="./code.js"></script>
+  </section>
   </body>
-</html>
