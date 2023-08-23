@@ -1,30 +1,3 @@
-// JSONデータの読み込み
-//import data from './test.json' assert { type: 'json' };
-
-// const response = await fetch("/tasks");
-// let jsonData = (await response.text());
-
-// const data = JSON.parse(jsonData);
-// console.log(jsonData.length);
-
-//         // プルダウンメニューにオプションを追加
-//         var userSelect = document.getElementById("userSelect");
-//         for (var i = 0; i < data.length; i++) {
-//             var option = document.createElement("option");
-//             option.value = data[i].user;
-//             option.text = data[i].user;
-//             userSelect.appendChild(option);
-//         }
-
-//                 // 変更ボタンにクリックイベントを追加し、func関数を実行
-//                 var changeButton = document.getElementById("changeButton");
-//                 changeButton.addEventListener("click", func);
-        
-//                 // 変更ボタンがクリックされたときに実行される空の関数
-//                 function changePage() {
-//                     Init(1);
-//                 }
-
 const userID=getParam('userID');
 if(userID){
 Init(userID);
