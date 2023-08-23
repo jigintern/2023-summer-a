@@ -2,38 +2,56 @@ import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
 
 window.onload = async () => {
   const elem = document.querySelector("#loginstate");
-  const path = "/logintest";
-  const method = "POST";
-  // fetchWithDidFromLocalstorageはメッセージボディ(json形式)を含むリクエストのため，GETを使うことができない.
 
+  let res;
   try {
-    const res = await fetchWithDidFromLocalstorage(path, {
-      method,
+    res = await fetchWithDidFromLocalstorage("/logintest", {
+      method: "POST",
     });
-    if (res == null) {
-      elem.innerText = "ログインしていません．";
-    } else if (!res.ok) {
-      // サーバーから成功ステータスが返ってこない場合
-      console.log(res);
-      if (res.status == 303) {
-        // localStorageにアカウント情報がない場合，303が返ってくるのでリダイレクト
-        const json = await res.json();
-        alert(json.message);
-        location.href = json.redirectURL; // リダイレクト
-        return; // reqのbodyを2回読んでしまう心配は恐らくないが一応．
-      } else {
-        const errMsg = await res.text();
-        elem.innerText = "エラー：" + errMsg;
-        console.log(errMsg);
-      }
-    } else {
-      // 成功の応答が返ってきた場合
-      elem.innerText = await res.text();
-    }
   } catch (e) {
-    elem.innerText = "エラー：" + e.message;
+    elem.innerText = "例外：" + e.message;
     console.log(e);
   }
+  const json = await res.json();
 
-  return;
+  if (!res.ok) {
+    // サーバーから成功ステータスが返ってこない場合(もしくはlocalStorageに認証情報がない)
+    console.log(res);
+    elem.innerText = "エラー：" + json.message;
+  } else {
+    // 成功の応答が返ってきた場合
+    elem.innerText = json.message;
+  }
+};
+
+document.getElementById("load").onclick = async () => {
+  let res;
+  try {
+    res = await fetchWithDidFromLocalstorage("/tasks", {
+      method: "POST",
+    });
+  } catch (e) {
+    console.log(e);
+  }
+  const json = await res.json();
+
+  if (!res.ok) {
+    // サーバーから成功ステータスが返ってこない場合(もしくはlocalStorageに認証情報がない)
+    if (res.status == 303) {
+      // localStorageにアカウント情報がない場合，303が返ってくるのでリダイレクト
+      console.log(json.message);
+      alert("ログインが必要です．ログインページへリダイレクトします．");
+      location.href = json.redirectURL; // リダイレクトを実行
+    } else {
+      console.log(json);
+    }
+  } else {
+    // 成功の応答が返ってきた場合
+    console.log(json);
+  }
+};
+
+document.getElementById("logout").onclick = () => {
+  localStorage.clear();
+  location.href = "/";
 };

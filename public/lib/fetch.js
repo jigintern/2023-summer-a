@@ -23,11 +23,14 @@ const fetchWithDid = async (url, method, options, did, password) => {
 
 // 引数はエンドポイント(String)，オプション(Object)
 // 戻値はResponseで統一．
+// NOTE: fetchWithDidFromLocalstorageはメッセージボディ(json形式)を含むリクエストのため，GETを使うことができない.
 export const fetchWithDidFromLocalstorage = async (url, options) => {
   const did = localStorage.getItem("did");
   const password = localStorage.getItem("password");
 
   if (did == null || password == null) {
+    // localStorageにdidパラメータもしくはpasswordパラメータが無い場合
+    // そもそもHTTP通信をしていないがResponseを返すことに注意
     console.log("No DID or no password saved in LocalStorage!");
     const body = {
       message: "ログインが必要です．",
