@@ -29,6 +29,7 @@ export class TaskControllerImpl implements TaskController{
 			const completed = userTask.filter((row) => row.is_completed).length / userTask.length * 100;
 			userTaskList.push({
 				user_id: uniqueUserIds[i],
+				user_name: userTask[0].user_name,
 				completed: completed,
 				tasks: userTask.map((row) => {
 					return {
@@ -54,6 +55,7 @@ export class TaskControllerImpl implements TaskController{
 
 		const taskList = {
 			user_id: userId,
+			user_name: task.rows[0].user_name,
 			completed: completed,
 			tasks: task.rows.map((row) => {
 				return {

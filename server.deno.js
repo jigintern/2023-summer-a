@@ -4,14 +4,14 @@ import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
 import { addDID, checkIfIdExists, getUser, isLoggedIn, addUserTasks, getUserIdFromDID } from "./did-db-controller.js";
 import { taskListMock } from "./mock/mock.ts";
 
-serve(async (req) => {
-  const pathname = new URL(req.url).pathname;
-  console.log(pathname);
+export const authRouter = async (req) => {
+    const pathname = new URL(req.url).pathname;
+    console.log(pathname);
 
-  // リクエスト(テスト)
-  if (req.method === "GET" && pathname === "/welcome-message") {
-    return new Response("jigインターンへようこそ！");
-  }
+    // リクエスト(テスト)
+    if (req.method === "GET" && pathname === "/welcome-message") {
+      return new Response("jigインターンへようこそ！");
+    }
 
   // ログインテスト
   if (req.method === "POST" && pathname === "/logintest") {
@@ -142,4 +142,4 @@ serve(async (req) => {
     showDirListing: true,
     enableCors: true,
   });
-});
+};
