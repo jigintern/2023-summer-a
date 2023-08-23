@@ -49,8 +49,10 @@ button:hover {
 .me {
     background-color: azure;
 }
+.me:hover {
+    background-color: rgb(213, 255, 255);
+}
 
-  
 table {
     width: 100%;
     border-collapse: collapse;
@@ -66,10 +68,16 @@ th {
     background-color: #f5f5f5;
     font-weight: bold;
 }
+th:hover {
+    background-color: #eeeeee;
+}
 
 td > div {
     display: flex;
     align-items: center;
+}
+tbody tr:hover {
+    background-color: #eeeeee;
 }
   
 progress {
@@ -90,11 +98,34 @@ progress {
     background-color: rgba(0,0,0,0.5);
 }
 
-#modalcontents {
-    background-color: #f4f4f4;
-    margin: 20% auto;
-    width: 50%;
-    box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2),0 7px 20px 0 rgba(0,0,0,0.17);
-    animation-name: modalopen;
-    animation-duration: 1s;
-}
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明の背景色 */
+    overflow: auto;
+  }
+  
+  #modalcontents {
+    background-color: #fff; /* モーダルコンテンツの背景色 */
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 60%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  #modalhead {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  #modalbody {
+    font-size: 16px;
+    line-height: 1.5;
+  }

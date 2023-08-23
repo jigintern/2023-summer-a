@@ -1,6 +1,77 @@
-window.onload=load;
+// window.onload=load;
 document.getElementById("load").onclick = load;
 
+
+document.getElementById("test").addEventListener("click", ()=>{
+    const response ={
+        access_user_id: 0,
+        body: 
+        [
+            {
+                id: 0,
+                user: "shuya",
+                completed: 80,
+                tasks: [ // あとで実装するかも
+                    {
+                        id: 0,
+                        name: "漢字どりる40ページまで",
+                        isCompleted: true
+                    }, 
+                    {
+                        id: 1,
+                        name: "漢字どりる80ページまで",
+                        isCompleted: false
+                    },
+                ]
+            },
+            {
+                id: 1,
+                user: "ooi",
+                completed: 95,
+                tasks: [ // あとで実装するかも
+                    {
+                        id: 0,
+                        name: "漢字どりる40ページまで",
+                        isCompleted: true
+                    }, 
+                    {
+                        id: 1,
+                        name: "漢字どりる80ページまで",
+                        isCompleted: false
+                    },
+                ]
+            }
+        ]
+    }
+    console.log(response.body.findIndex(item => item.id===0));
+
+
+    const id=response.access_user_id;
+    const list=response.body;
+    document.getElementById("update").addEventListener("click", ()=>{location.href='../update?userID='+id});
+
+    //table作成
+    let tbody="";
+
+    //自分
+    tbody+="<tr class=\'me\'>";
+    tbody+="<td>"+list[id].id+"</td>"+
+    "<td>"+list[id].user+"</td>"+
+    "<td><div>"+list[id].completed+"%"+"<progress max=\"100\" value="+list[id].completed+"></progress></div></td>";
+    tbody+="</tr>";
+
+    //自分以外
+    for(let i=0; i<list.length; ++i){
+        if(id===i) continue;
+        tbody+="<tr>";
+        tbody+="<td>"+list[i].id+"</td>"+
+        "<td>"+list[i].user+"</td>"+
+        "<td><div>"+list[i].completed+"%"+"<progress max=\"100\" value="+list[i].completed+"></progress></div></td>";
+        tbody+="</tr>";
+    }
+    document.getElementById("tbody").innerHTML=tbody;
+    initInfo(response);
+});
 
 async function load(){
     const response = await fetch('/tasks');
@@ -116,14 +187,31 @@ function comparePercentDesc(a, b)
 	return b.value.split('%')[0] - a.value.split('%')[0];
 }
 
-function initInfo(){
+function initInfo(response){
     document.querySelectorAll('td').forEach(elm => {
         elm.onclick = function() {
             document.getElementById("modal").style.display = "block";
+            const targetId=this.parentNode.firstChild.textContent;
+            const targetIndex=response.body.findIndex(item => item.id==targetId);
+            document.getElementById("modalhead").innerText=response.body[targetIndex].user;
+
+            const tasks=response.body[targetIndex].tasks;
+            console.log(tasks);
+            let text="";
+            for(let i=0; i<tasks.length; ++i){
+                text+=tasks[i].id+". "+tasks[i].name+" ";
+                if(tasks[i].isCompleted===true)
+                    text+="O";
+                else
+                    text+="X"
+                text+='\n';
+            }
+            document.getElementById("modalbody").innerText=text;
         };
     });
 }
 
 document.getElementById("modal").addEventListener("click", (e) =>{
-    e.target.style.display="none";
+    if(e.target.id==="modal")
+        e.target.style.display="none";
 });
