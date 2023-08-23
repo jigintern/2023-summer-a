@@ -11,3 +11,11 @@
 2. 青い「+ New Project」から「Create a project」画面に遷移して、「Deploy an existing GitHub repository」側から GitHub repository の「Select a repository」をクリック
 3. Create a project from GitHub の画面で、デプロイするリポジトリを選んでこのリポジトリをテンプレートにした場合は「No build step」で、メインのDenoのコードが書いてあるファイルをエントリポイントに指定して「Create & Deploy」します。
 4. ダイアログが出て Deployed になれば成功。右上の青い「View」からデプロイされたページが確認できるはずです。
+
+
+## mockについて
+
+以下のコマンドでmockを起動できます。
+```sh
+deno task mock
+```

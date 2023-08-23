@@ -1,0 +1,102 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+/* タスクセットのスタイル */
+.taskSet {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  /* ラベルとテキストボックスのスタイル */
+  label {
+    font-weight: bold;
+  }
+  
+  .newValue {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+  }
+  
+  /* 更新ボタンのスタイル */
+  .updateButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .updateButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* 更新結果のスタイル */
+  #updateResult {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  .boxes {
+    margin: auto;
+    padding: 50px;
+    background: #484848;
+  }
+
+  input[type="checkbox"] { display: none; }
+  
+  input[type="checkbox"] + label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 20px;
+    font: 14px/20px 'Open Sans', Arial, sans-serif;
+    color: #ddd;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  input[type="checkbox"] + label:last-child { margin-bottom: 0; }
+  
+  input[type="checkbox"] + label:before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #6cc0e5;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: .6;
+    -webkit-transition: all .12s, border-color .08s;
+    transition: all .12s, border-color .08s;
+  }
+  
+  input[type="checkbox"]:checked + label:before {
+    width: 10px;
+    top: -5px;
+    left: 5px;
+    border-radius: 0;
+    opacity: 1;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+body {
+  background-color: #f4f4f4;
+  font-family: 'Open Sans', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.progress {
+  width: 100%;
+  max-width: 1000px;
+}

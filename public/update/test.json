@@ -1,0 +1,27 @@
+{
+    "id": 0,
+    "user": "ooi",
+    "completed": 40,
+    "tasks": [
+      {
+        "id": 1,
+        "taskName": "起きる",
+        "completed": false
+      },
+      {
+        "id": 2,
+        "taskName": "ご飯を食べる",
+        "completed": true
+      },
+      {
+        "id": 3,
+        "taskName": "風呂に入る",
+        "completed": false
+      },
+      {
+        "id": 4,
+        "taskName": "寝る",
+        "completed": true
+      }
+    ]
+  }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>確認</title>
+    <script type="module" src="/show/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/show/style.css" />
+  </head>
+  <body>
+    <button id="load">更新</button>
+    <button onclick="location.href='../update'" id="update">編集</button>
+
+    <div id="error">
+      <div id="emessage"></div>
+      <button onclick="location.href='../login'" id="redirect">ログイン</button>
+    </div>
+
+    <div id="contents">
+      <table id="table">
+        <thead id="thead">
+          <tr><th>ID</th><th>USER</th><th>COMPLETED</th></tr>
+        </thead>
+        <tbody id=tbody>
+          
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
