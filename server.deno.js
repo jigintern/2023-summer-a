@@ -136,4 +136,4 @@ export const authRouter = async (req) => {
     showDirListing: true,
     enableCors: true,
   });
-});
+};
