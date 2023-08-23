@@ -23,8 +23,9 @@ export const taskRouter = async (req: Request, taskController: TaskController) =
 	const access_user_id = userInfo.userId;
 
 	if (!isLogin) {
-		const body = { message: "認証されていません" };
-		const res = new Response(JSON.stringify({access_user_id, body}), {
+		const body = { message: "認証されていません",
+					redirectURL: "/login" };
+		const res = new Response(JSON.stringify(body), {
 			status: 403,
 			headers: {
 				"content-type": "application/json",
