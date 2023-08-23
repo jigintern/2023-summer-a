@@ -45,39 +45,39 @@ export class TaskDb implements TaskModel {
 		return { rows: task.rows } as ExecuteResult;
 	}
 
-	private async userExists(userId: number): Promise<boolean> {
-		const result = await this.db.execute(`SELECT * FROM users WHERE user_id = ?;`, [userId]);
-		if (!result.rows) {
-			return false;
-		} else {
-			return result.rows.length === 1;
-		}
-	}
+	// private async userExists(userId: number): Promise<boolean> {
+	// 	const result = await this.db.execute(`SELECT * FROM users WHERE user_id = ?;`, [userId]);
+	// 	if (!result.rows) {
+	// 		return false;
+	// 	} else {
+	// 		return result.rows.length === 1;
+	// 	}
+	// }
 
-	// あるユーザ一人に対して，tasksテーブルにある全タスクを，id_completedを0として紐づけ
-	public async addUserTasks(userId: number): Promise<ExecuteResult> {
-		if (!(await this.userExists(userId))) {
-			console.log("Error in addUserTasks(): Missing user, abort query execution.");
-			return { rows: [] };
-		}
+	// // あるユーザ一人に対して，tasksテーブルにある全タスクを，id_completedを0として紐づけ
+	// public async addUserTasks(userId: number): Promise<ExecuteResult> {
+	// 	if (!(await this.userExists(userId))) {
+	// 		console.log("Error in addUserTasks(): Missing user, abort query execution.");
+	// 		return { rows: [] };
+	// 	}
 
-		const allTaskIDs = await this.db.execute(`SELECT id FROM tasks;`); // クエリ結果
-		if (!allTaskIDs.rows || allTaskIDs.rows.length === 0) {
-			return { rows: [] };
-		}
+	// 	const allTaskIDs = await this.db.execute(`SELECT id FROM tasks;`); // クエリ結果
+	// 	if (!allTaskIDs.rows || allTaskIDs.rows.length === 0) {
+	// 		return { rows: [] };
+	// 	}
 
-		const is_completed = 0;
-		const newRows = allTaskIDs.rows.map((r) => [userId, r.id, is_completed]); // user_tasksに追加される新しい行を二次元配列で表現したもの
-		//
-		let mainQueryStr = "INSERT INTO user_tasks (user_id, Task_id, is_completed) VALUES ";
-		mainQueryStr += new Array(newRows.length).fill("(?, ?, ?)").join(", ");
-		mainQueryStr += ";";
-		const result = await this.db.execute(mainQueryStr, newRows.flat(Infinity));
+	// 	const is_completed = 0;
+	// 	const newRows = allTaskIDs.rows.map((r) => [userId, r.id, is_completed]); // user_tasksに追加される新しい行を二次元配列で表現したもの
+	// 	//
+	// 	let mainQueryStr = "INSERT INTO user_tasks (user_id, Task_id, is_completed) VALUES ";
+	// 	mainQueryStr += new Array(newRows.length).fill("(?, ?, ?)").join(", ");
+	// 	mainQueryStr += ";";
+	// 	const result = await this.db.execute(mainQueryStr, newRows.flat(Infinity));
 
-		if (!result.rows || result.rows.length === 0) {
-			return { rows: [] };
-		}
+	// 	if (!result.rows || result.rows.length === 0) {
+	// 		return { rows: [] };
+	// 	}
 
-		return { rows: result.rows } as ExecuteResult;
-	}
+	// 	return { rows: result.rows } as ExecuteResult;
+	// }
 }
