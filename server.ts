@@ -4,6 +4,7 @@ import { serve } from 'https://deno.land/std@0.194.0/http/server.ts?s=serve'
 import { serveDir } from 'https://deno.land/std@0.194.0/http/file_server.ts?s=serveDir'
 
 import { taskRouter } from "./task/route.ts";
+import { authRouter } from "./server.deno.js";
 
 import { Client } from "https://deno.land/x/mysql@v2.11.0/mod.ts";
 import { connectionParam } from "./env.ts";
@@ -21,13 +22,9 @@ serve(async (req: Request) => {
 	if (pathname.startsWith("/tasks")) {
 		return await taskRouter(req, taskController);
 	} else if (pathname.startsWith("/users")) {
-		console.log("users");
-		return new Response(JSON.stringify("users"), {
-			headers: {
-				"content-type": "application/json",
-			},
-		});
-	};
+		return await authRouter(req);
+	}
+
 	return serveDir(req, {
 		fsRoot: "public",
 		urlRoot: "",
