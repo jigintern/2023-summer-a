@@ -39,11 +39,6 @@
     margin-top: 10px;
     font-weight: bold;
   }
-  
-  progress {
-    width: 100%;
-  }
-  
 
   .boxes {
     margin: auto;
@@ -101,8 +96,7 @@ body {
   padding: 0;
 }
 
-.user-list-button {
-  float: right; /* ボタンを右寄せに配置 */
-  margin-top: 20px;
-  margin-right: 20px;
+.progress {
+  width: 100%;
+  max-width: 1000px;
 }
