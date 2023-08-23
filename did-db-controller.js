@@ -1,21 +1,13 @@
 import { Client } from "https://deno.land/x/mysql@v2.11.0/mod.ts";
-import "https://deno.land/std@0.192.0/dotenv/load.ts";
 import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
 
-// SQLの設定
-const connectionParam = {
-  hostname: Deno.env.get("HOST_NAME"),
-  username: Deno.env.get("SQL_USER"),
-  password: Deno.env.get("SQL_PASSWORD"),
-  db: Deno.env.get("DATABASE"),
-  port: Number(Deno.env.get("PORT")),
-};
+import { connectionParam } from "./env.ts";
 
-// クライアントの作成
+// SQLクライアントの作成
 const client = await new Client().connect(connectionParam);
 
+// DBにDIDがあるか
 export async function checkIfIdExists(did) {
-  // DBにDIDがあるか
   const res = await client.execute(`select count(*) from users where did = ?;`, [did]);
   // レスポンスのObjectから任意のDIDと保存されているDIDが一致している数を取得し
   // その数が1かどうかを返す
@@ -23,27 +15,51 @@ export async function checkIfIdExists(did) {
   return res.rows[0][res.fields[0].name] === 1;
 }
 
+// DBにDIDとuserNameを追加
 export async function addDID(did, userName) {
-  // DBにDIDとuserNameを追加
   await client.execute(`insert into users (did, user_name) values (?, ?);`, [did, userName]);
 }
 
+// didから，DBにアクセスして，一致するユーザの行を取得．戻値はDBからの応答であることに注意
+// res.rows[0].user_name などでカラムの値を取得する必要がある
 export async function getUser(did) {
   // DBからsignatureが一致するレコードを取得
   const res = await client.execute(`select * from users where did = ?;`, [did]);
   return res;
 }
 
+// ログインの確認を行い，正常であればユーザ情報を返す．
+// 戻値 ... loggedIn: Boolean, loginUserInfo: Object
 export async function isLoggedIn(req) {
-  const idExists = await checkIfIdExists(req["did"]);
-  const isVerified = DIDAuth.verifySign(req["did"], req["sign"], req["message"]);
-  let userName = undefined;
+  const json = await req.json();
+  const [did, sign, message] = [json.did, json.sign, json.message];
 
-  if (idExists && isVerified) {
-    res = await getUser(did);
-    userName = res.rows[0].user_name;
-  } else {
-    userName = false;
+  if (did == null || sign == null || message == null) {
+    console.log("No did, sign, or message provided.");
+    return { loggedIn: false, loginUserInfo: new Object() };
   }
-  return idExists, userName;
+
+  const idExists = await checkIfIdExists(did);
+  if (!idExists) {
+    console.log("DID, sign, and message were provided but the DID is not exist on DB.");
+    return { loggedIn: false, loginUserInfo: new Object() };
+  }
+
+  const isVerified = DIDAuth.verifySign(did, sign, message);
+  if (!isVerified) {
+    console.log("DID, sign, and message were provided and the DID is on DB, but verifySign failed!");
+    return { loggedIn: false, loginUserInfo: new Object() };
+  }
+
+  // ここまでくれば送信者はデータベースに存在し，reqは正しいリクエストである
+  const res = await getUser(did);
+  const userId = res.rows[0].user_id;
+  const userName = res.rows[0].user_name;
+
+  const loginUserInfo = {
+    userId: userId,
+    userName: userName,
+    did: did,
+  };
+  return { loggedIn: true, loginUserInfo: loginUserInfo };
 }
