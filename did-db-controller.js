@@ -63,3 +63,44 @@ export async function isLoggedIn(req) {
   };
   return { loggedIn: true, loginUserInfo: loginUserInfo };
 }
+
+// getUserのuser_idを入力とするバージョン
+async function userExists(userId) {
+  const result = await client.execute(`SELECT * FROM users WHERE user_id = ?;`, [userId]);
+  if (!result.rows) {
+    return false;
+  } else {
+    return result.rows.length === 1;
+  }
+}
+
+export async function getUserIdFromDID(did) {
+  const result = await client.execute(`SELECT * FROM users WHERE did = ?;`, [did]);
+  if (!result.rows) {
+    return null;
+  } else {
+    return result.rows[0].user_id;
+  }
+}
+
+// あるユーザ一人に対して，tasksテーブルにある全タスクを，id_completedを0として紐づけ
+export async function addUserTasks(userId) {
+  if (!(await userExists(userId))) {
+    console.log("Error in addUserTasks(): Missing user, abort query execution.");
+    return { rows: [] };
+  }
+
+  const allTaskIDs = await client.execute(`SELECT id FROM tasks;`); // クエリ結果
+  if (!allTaskIDs.rows || allTaskIDs.rows.length === 0) {
+    return { rows: [] };
+  }
+
+  const is_completed = 0;
+  const newRows = allTaskIDs.rows.map((r) => [userId, r.id, is_completed]); // user_tasksに追加される新しい行を二次元配列で表現したもの
+
+  let mainQueryStr = "INSERT INTO user_tasks (user_id, Task_id, is_completed) VALUES ";
+  mainQueryStr += new Array(newRows.length).fill("(?, ?, ?)").join(", ");
+  mainQueryStr += ";";
+  const result = await client.execute(mainQueryStr, newRows.flat(Infinity));
+  return result;
+}

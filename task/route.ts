@@ -17,12 +17,14 @@ export const taskRouter = async (req: Request, taskController: TaskController) =
 	const pathname = new URL(req.url).pathname;
 	console.log(pathname);
 
-	const loginInfo = await isLoggedIn(req);
+	const loginInfo = await isLoggedIn(req.clone());
 	const isLogin = loginInfo.loggedIn;
 	const userInfo = loginInfo.loginUserInfo as LoginUserInfo;
+	const access_user_id = userInfo.userId;
 
 	if (!isLogin) {
-		const body = { message: "認証されていません" };
+		const body = { message: "認証されていません",
+					redirectURL: "/login" };
 		const res = new Response(JSON.stringify(body), {
 			status: 403,
 			headers: {
@@ -33,20 +35,20 @@ export const taskRouter = async (req: Request, taskController: TaskController) =
 		return res;
 	} 
 
-	if (req.method === "GET" && pathname === "/tasks") {
+	if (req.method === "POST" && pathname === "/tasks") {
 		const body = await taskController.getTasks();
 		console.log(body);
-		return new Response(JSON.stringify(body), {
+		return new Response(JSON.stringify({access_user_id, body}), {
 			headers: {
 				"content-type": "application/json",
 			},
 		});
 	}
 
-	if (req.method === "GET" && pathname.startsWith("/tasks/")) {
+	if (req.method === "POST" && pathname.startsWith("/tasks/")) {
 		const userId = Number(pathname.split("/")[2]);
 		const body = await taskController.getTask(userId);
-		return new Response(JSON.stringify(body), {
+		return new Response(JSON.stringify({access_user_id, body}), {
 			headers: {
 				"content-type": "application/json",
 			},
@@ -55,13 +57,13 @@ export const taskRouter = async (req: Request, taskController: TaskController) =
 
 	if (req.method === "PUT" && pathname === "/tasks") {
 		const reqJson = await req.json();
-
-		const userId = reqJson.user_id;
-		const taskId = reqJson.task_id;
-		const isCompleted = reqJson.is_completed;
+		
+		const userId = reqJson.userId;
+		const taskId = reqJson.taskId;
+		const isCompleted = reqJson.isCompleted;
 
 		const body = await taskController.updateTask(userId, taskId, isCompleted);
-		return new Response(JSON.stringify(body), {
+		return new Response(JSON.stringify({access_user_id, body}), {
 			headers: {
 				"content-type": "application/json",
 			},

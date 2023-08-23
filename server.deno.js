@@ -1,17 +1,17 @@
 import { serve } from "https://deno.land/std@0.151.0/http/server.ts";
 import { serveDir } from "https://deno.land/std@0.151.0/http/file_server.ts";
 import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
-import { addDID, checkIfIdExists, getUser, isLoggedIn } from "./did-db-controller.js";
+import { addDID, checkIfIdExists, getUser, isLoggedIn, addUserTasks, getUserIdFromDID } from "./did-db-controller.js";
 import { taskListMock } from "./mock/mock.ts";
 
-serve(async (req) => {
-  const pathname = new URL(req.url).pathname;
-  console.log(pathname);
+export const authRouter = async (req) => {
+    const pathname = new URL(req.url).pathname;
+    console.log(pathname);
 
-  // リクエスト(テスト)
-  if (req.method === "GET" && pathname === "/welcome-message") {
-    return new Response("jigインターンへようこそ！");
-  }
+    // リクエスト(テスト)
+    if (req.method === "GET" && pathname === "/welcome-message") {
+      return new Response("jigインターンへようこそ！");
+    }
 
   // ログインテスト
   if (req.method === "POST" && pathname === "/logintest") {
@@ -97,6 +97,12 @@ serve(async (req) => {
     try {
       // ここまでくれば正常なので，DBにDIDとuserNameを保存する
       await addDID(did, userName);
+      // さらに，DBにユーザにロードマップ中の目標すべてを紐づける
+      const userId = await getUserIdFromDID(did);
+      const queryResult = await addUserTasks(userId);
+      console.log("user_id: " + userId + " was registered. Query result: ");
+      console.log(queryResult);
+      // 必要な処理を終えたのでOKを出す
       return new Response("ok");
     } catch (e) {
       console.error(e);
@@ -136,4 +142,4 @@ serve(async (req) => {
     showDirListing: true,
     enableCors: true,
   });
-});
+};
