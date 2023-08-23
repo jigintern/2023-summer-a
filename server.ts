@@ -23,6 +23,8 @@ serve(async (req: Request) => {
 		return await taskRouter(req, taskController);
 	} else if (pathname.startsWith("/users")) {
 		return await authRouter(req);
+	} else if (req.method === "POST" && pathname === "/logintest") {
+		return await authRouter(req);
 	}
 
 	return serveDir(req, {
