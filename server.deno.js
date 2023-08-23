@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   // ログインテスト
-  if (req.method === "POST" && pathname === "/logintest") {
+  if (req.method === "POST" && pathname === "/authsample") {
     let loggedIn, loginUserInfo;
     try {
       ({ loggedIn, loginUserInfo } = await isLoggedIn(req)); // 分割代入
@@ -34,7 +34,7 @@ serve(async (req) => {
       // 以下，ログインができている場合の処理
       const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
       return new Response(
-        JSON.stringify({ message: "（エンドポイント/logintestからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId })
+        JSON.stringify({ message: "（エンドポイント/authsampleからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId })
       );
     }
   }

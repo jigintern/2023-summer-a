@@ -5,7 +5,7 @@ window.onload = async () => {
 
   let res;
   try {
-    res = await fetchWithDidFromLocalstorage("/logintest", {
+    res = await fetchWithDidFromLocalstorage("/authsample", {
       method: "POST",
     });
   } catch (e) {
