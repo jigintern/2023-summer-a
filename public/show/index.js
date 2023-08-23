@@ -1,5 +1,6 @@
-// window.onload = load;
+window.onload=load;
 document.getElementById("load").onclick = load;
+
 
 async function load(){
     const response = await fetch('/tasks');
@@ -43,27 +44,74 @@ async function load(){
     const list=json.taskListMock;
 
     //table作成
-    let table="<table>";
-    table+="<thead><tr><th>ID</th><th>USER</th><th>COMPLETED</th></tr></thead>"
-    table+="<tbody>";
+    let tbody="";
 
     //自分
-    table+="<tr class=\'me\'>";
-    table+="<td>"+list[id].id+"</td>"+
+    tbody+="<tr class=\'me\'>";
+    tbody+="<td>"+list[id].id+"</td>"+
     "<td>"+list[id].user+"</td>"+
     "<td><div>"+list[id].completed+"%"+"<progress max=\"100\" value="+list[id].completed+"></progress></div></td>";
-    table+="</tr>";
+    tbody+="</tr>";
 
     //自分以外
     for(let i=0; i<list.length; ++i){
         if(id===i) continue;
-        table+="<tr>";
-        table+="<td>"+list[i].id+"</td>"+
+        tbody+="<tr>";
+        tbody+="<td>"+list[i].id+"</td>"+
         "<td>"+list[i].user+"</td>"+
         "<td><div>"+list[i].completed+"%"+"<progress max=\"100\" value="+list[i].completed+"></progress></div></td>";
-        table+="</tr>";
+        tbody+="</tr>";
     }
-    table+="</tbody>"
-    table+="</table>";
-    document.getElementById("contents").innerHTML=table;
+    document.getElementById("tbody").innerHTML=tbody;
+}
+
+document.querySelectorAll('th').forEach(elm => {
+    elm.onclick = function () {
+        const columnNo = this.cellIndex; //クリックされた列番号
+        const table = this.parentNode.parentNode.parentNode;
+        const sortArray = []; //クリックした列のデータを全て格納する配列
+        for (let r = 1; r < table.rows.length; r++) {
+            //行番号と値を配列に格納
+            const column = new Object;
+            column.row = table.rows[r];
+            column.value = table.rows[r].cells[columnNo].textContent;
+            sortArray.push(column);
+        }
+        if (columnNo === 0) { //ID
+            sortArray.sort(compareNumber);
+        } else if (columnNo === 1){ //なまえ
+            sortArray.sort(compareString);
+        } else {
+            sortArray.sort(comparePercentDesc);
+        }
+        //ソート後のTRオブジェクトを順番にtbodyへ追加（移動）
+        const tbody = document.getElementById("tbody");
+        for (let i = 0; i < sortArray.length; i++) {
+            tbody.appendChild(sortArray[i].row);
+        }
+    };
+});
+
+
+
+//数値ソート（昇順）
+function compareNumber(a, b)
+{
+	return a.value - b.value;
+}
+
+//文字列ソート（昇順）
+function compareString(a, b) {
+	if (a.value < b.value) {
+		return -1;
+	} else {
+		return 1;
+	}
+	return 0;
+}
+
+//％ソート (降順)
+function comparePercentDesc(a, b)
+{
+	return b.value.split('%')[0] - a.value.split('%')[0];
 }
