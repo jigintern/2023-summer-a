@@ -1,7 +1,7 @@
 import type { TaskModel } from './db.ts';
 
 export interface TaskController {
-	getTasks(userId: number): Promise<string>;
+	getTasks(): Promise<string>;
 	getTask(userId: number): Promise<string>;
 	updateTask(userId: number, taskId: number, isCompleted: boolean): Promise<string>;
 }
@@ -11,11 +11,11 @@ export class TaskControllerImpl implements TaskController{
 		this.taskModel = taskModel;
 	}
 
-	public async getTasks(userId: number): Promise<string> {
+	public async getTasks(): Promise<string> {
 		const tasks = await this.taskModel.getAllTasks();
 
 		if (!tasks.rows || tasks.rows.length === 0) {
-			return JSON.stringify({userId, tasks: []});
+			return JSON.stringify([]);
 		}
 
 		// user_idのユニークな数を取得する
