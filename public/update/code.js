@@ -70,7 +70,7 @@ function createTaskSet(task) {
   taskSet.appendChild(customCheckBox);
   taskSet.appendChild(taskTitle);
 
-  newValue.addEventListener('change', () => checkBoxChanged(task.id + 1));
+  newValue.addEventListener('change', () => checkBoxChanged(task.id));
 
   return (taskSet);
 }
@@ -90,8 +90,8 @@ function getParam(name, url) {
 async function checkBoxChanged(taskNumber) {
 
     // タスク内容の取得
-    const taskContent = document.querySelector(`#cb${taskNumber-1}`).nextSibling.textContent;
-    const newValue = document.querySelector(`#cb${taskNumber-1}`).checked;
+    const taskContent = document.querySelector(`#cb${taskNumber}`).nextSibling.textContent;
+    const newValue = document.querySelector(`#cb${taskNumber}`).checked;
   
     // 更新結果を表示するエリアにメッセージを表示
     const updateResult = document.getElementById('updateResult');
@@ -101,14 +101,14 @@ async function checkBoxChanged(taskNumber) {
     const response = await fetch("/test",{
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id:taskNumber-1,isCompleted:newValue})
+        body: JSON.stringify({id:taskNumber,isCompleted:newValue})
       });
 
     const res = await response.text()
     document.getElementById("server_response").textContent = res;
 
     //保存していたjsonファイルの内容の書き換え
-    userData.tasks[taskNumber-1].isCompleted=newValue;
+    userData.tasks[taskNumber].isCompleted=newValue;
     Init(userID);
   }
   
