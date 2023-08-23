@@ -1,20 +1,41 @@
+import {fetchWithDidFromLocalstorage} from "/lib/fetch.js";
+
 const completedtTaskList = document.getElementById('completedtTaskList');
 const uncompletedtTaskList = document.getElementById('uncompletedtTaskList');
 const progressValue=document.getElementById('progressValue');
 const userProgress = document.getElementById('userProgress');
 const userNameElement = document.getElementById('userName');
+const serverResponse =  document.getElementById("server_response");
 
 const userID=getParam('userID');
+let allUserData,userData;
 
-const data = JSON.parse(await (await fetch(`/tasks/${userID}`)).text());
-const userData=data[`tasksMockUser${userID}`];
+try{
+    const url = `/tasks/${userID}`;
+    const options = {
+        method: "POST"
+    };
 
-if(userID){
-    Init(userID);
-}else
-{
-    const updateResult = document.getElementById('updateResult');
-    updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
+    allUserData = JSON.parse(await (await fetchWithDidFromLocalstorage(url,options)).text());
+
+    if(allUserData.message)
+    {
+        showErrorMessage(`エラーメッセージ:${allUserData.message}`);
+    }
+
+    userData = allUserData[`tasksMockUser${userID}`];
+
+    if(userID){
+        Init(userID);
+    }else
+    {
+        const updateResult = document.getElementById('updateResult');
+        updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
+    }
+
+}catch (error) {
+    console.error('An error occurred while fetching data:', error);
+    showErrorMessage(`データの取得に失敗しました :${error}`);
 }
 
 //タスクの初期化
@@ -97,18 +118,40 @@ async function checkBoxChanged(taskNumber) {
     const updateResult = document.getElementById('updateResult');
     updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
 
-    //PUTリクエストを送信
-    const response = await fetch("/test",{
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id:taskNumber,isCompleted:newValue})
-      });
+    const url = `/tasks`
+    const options = {
+        method: "PUT",
+        userId: userID,
+        taskId: taskNumber,
+        isCompleted: newValue
+    }
+    
+    const res = await(await fetchWithDidFromLocalstorage(url, options)).text();
 
-    const res = await response.text()
-    document.getElementById("server_response").textContent = res;
+    serverResponse.textContent = res;
+
+    if(res.message)
+    {
+        showErrorMessage(`データの取得に失敗しました :${res.message}`);
+    }
 
     //保存していたjsonファイルの内容の書き換え
     userData.tasks[taskNumber].isCompleted=newValue;
     Init(userID);
+  }
+  
+  // エラーメッセージを表示する関数
+function showErrorMessage(message) {
+    const errorContainer = document.getElementById('errorContainer');
+    const errorMessage = document.getElementById('errorMessage');
+  
+    errorMessage.textContent = message;
+    errorContainer.style.display = 'block';
+  }
+  
+  // エラーメッセージを非表示にする関数
+  function hideErrorMessage() {
+    const errorContainer = document.getElementById('errorContainer');
+    errorContainer.style.display = 'none';
   }
   
