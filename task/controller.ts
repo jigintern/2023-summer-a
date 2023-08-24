@@ -1,9 +1,9 @@
 import type { TaskModel } from './db.ts';
 
 export interface TaskController {
-	getTasks(): Promise<string>;
-	getTask(userId: number): Promise<string>;
-	updateTask(userId: number, taskId: number, isCompleted: boolean): Promise<string>;
+	getTasks(): any;
+	getTask(userId: number): any;
+	updateTask(userId: number, taskId: number, isCompleted: boolean): any;
 }
 
 export class TaskControllerImpl implements TaskController{
@@ -11,11 +11,11 @@ export class TaskControllerImpl implements TaskController{
 		this.taskModel = taskModel;
 	}
 
-	public async getTasks(): Promise<string> {
+	public async getTasks() {
 		const tasks = await this.taskModel.getAllTasks();
 
 		if (!tasks.rows || tasks.rows.length === 0) {
-			return JSON.stringify([]);
+			return [];
 		}
 
 		// user_idのユニークな数を取得する
@@ -40,14 +40,14 @@ export class TaskControllerImpl implements TaskController{
 				}),
 			});
 		}
-		return JSON.stringify(userTaskList);
+		return userTaskList;
 	}
 
-	public async getTask(userId: number): Promise<string> {
+	public async getTask(userId: number) {
 		const task = await this.taskModel.getUserTasks(userId);
 
 		if (!task.rows || task.rows.length === 0) {
-			return JSON.stringify({userId, task: []});
+			return {userId, task: []};
 		}
 
 		// is_completedがtrueの割合を求める
@@ -66,11 +66,11 @@ export class TaskControllerImpl implements TaskController{
 			}),
 		};
 		console.log(taskList);
-		return JSON.stringify(taskList);
+		return taskList;
 	}
 
-	public async updateTask(userId: number, TaskId: number, isCompleted: boolean): Promise<string> {
+	public async updateTask(userId: number, TaskId: number, isCompleted: boolean) {
 		const task = await this.taskModel.updateTask(userId, TaskId, isCompleted);
-		return JSON.stringify(task);
+		return task;
 	}
 }
