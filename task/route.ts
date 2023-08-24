@@ -62,6 +62,18 @@ export const taskRouter = async (req: Request, taskController: TaskController) =
 		const taskId = reqJson.taskId;
 		const isCompleted = reqJson.isCompleted;
 
+		if (userId !== access_user_id) {
+			const body = { message: "アクセス権限がありません" };
+			const res = new Response(JSON.stringify(body), {
+				status: 403,
+				headers: {
+					"content-type": "application/json",
+				},
+			});
+			console.log(res);
+			return res;
+		}
+
 		const body = await taskController.updateTask(userId, taskId, isCompleted);
 		return new Response(JSON.stringify({access_user_id, body}), {
 			headers: {
