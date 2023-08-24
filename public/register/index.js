@@ -1,5 +1,11 @@
 import { DIDAuth } from "https://jigintern.github.io/did-login/auth/DIDAuth.js";
 
+const savePemFile = async () => {
+  const did = localStorage.getItem("did");
+  const password = localStorage.getItem("password");
+  DIDAuth.savePem(did, password);
+};
+
 // [コールバックを登録] 登録ボタンの処理
 document.getElementById("submit").onclick = async (event) => {
   event.preventDefault(); // デフォルトの動作(フォーム送信と連動した勝手なリロードなど？)を明示的に防ぐ
@@ -42,6 +48,12 @@ document.getElementById("submit").onclick = async (event) => {
     localStorage.setItem("did", did);
     localStorage.setItem("password", password);
     localStorage.setItem("name", name);
+
+    alert(
+      "ユーザ登録とログインが正常に完了しました．\n認証情報の入ったファイルをダウンロードします．\n\n**再ログインに用いる認証情報を含むため，わかりやすい名前を付け，大切に保管をお願いします．\n\nダウンロードが開始されない場合は，「DID」とパスワードを保存をクリックしてください．**"
+    );
+    // 認証情報が入ったファイル(PEMファイル)を保存
+    savePemFile();
   } catch (err) {
     document.getElementById("error").innerText = err.message;
   }
@@ -49,8 +61,7 @@ document.getElementById("submit").onclick = async (event) => {
 
 // [コールバックを登録] DIDをファイルとして保存ボタンの処理
 // HTML要素からdid, passをとってきて，外部ライブラリで保存処理呼び出すだけ
-document.getElementById("saveBtn").onclick = async () => {
-  const did = localStorage.getItem("did");
-  const password = localStorage.getItem("password");
-  DIDAuth.savePem(did, password);
+document.getElementById("saveBtn").onclick = async (event) => {
+  event.preventDefault();
+  savePemFile();
 };
