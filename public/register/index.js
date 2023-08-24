@@ -49,11 +49,9 @@ document.getElementById("submit").onclick = async (event) => {
     localStorage.setItem("password", password);
     localStorage.setItem("name", name);
 
-    alert(
-      "ユーザ登録とログインが正常に完了しました．\n認証情報の入ったファイルをダウンロードします．\n\n**再ログインに用いる認証情報を含むため，わかりやすい名前を付け，大切に保管をお願いします．\n\nダウンロードが開始されない場合は，「DID」とパスワードを保存をクリックしてください．**"
-    );
     // 認証情報が入ったファイル(PEMファイル)を保存
-    savePemFile();
+    await savePemFile();
+    location.href = "/show"; // リダイレクト
   } catch (err) {
     document.getElementById("error").innerText = err.message;
   }
