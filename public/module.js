@@ -1,28 +1,34 @@
 import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
 
-window.onload = async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const elem = document.querySelector("#loginstate");
 
   let res;
   try {
-    res = await fetchWithDidFromLocalstorage("/authsample", {
+    res = await fetchWithDidFromLocalstorage("/users/auth", {
       method: "POST",
     });
   } catch (e) {
     elem.innerText = "例外：" + e.message;
     console.log(e);
   }
-  const json = await res.json();
+
+  console.log(res);
 
   if (!res.ok) {
-    // サーバーから成功ステータスが返ってこない場合(もしくはlocalStorageに認証情報がない)
-    console.log(res);
-    elem.innerText = "エラー：" + json.message;
+    if (res.status === 303) {
+      location.href = "/login";
+    } else {
+      // サーバーから成功ステータスが返ってこない場合(もしくはlocalStorageに認証情報がない)
+      const json = await res.json();
+      elem.innerText = "エラー：" + json.message;
+    }
   } else {
     // 成功の応答が返ってきた場合
+    const json = await res.json();
     elem.innerText = json.message;
   }
-};
+});
 
 document.getElementById("load").onclick = async () => {
   let res;

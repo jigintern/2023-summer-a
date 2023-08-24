@@ -5,16 +5,16 @@ import { addDID, checkIfIdExists, getUser, isLoggedIn, addUserTasks, getUserIdFr
 import { taskListMock } from "./mock/mock.ts";
 
 export const authRouter = async (req) => {
-    const pathname = new URL(req.url).pathname;
-    console.log(pathname);
+  const pathname = new URL(req.url).pathname;
+  console.log(pathname);
 
-    // リクエスト(テスト)
-    if (req.method === "GET" && pathname === "/welcome-message") {
-      return new Response("jigインターンへようこそ！");
-    }
+  // リクエスト(テスト)
+  if (req.method === "GET" && pathname === "/welcome-message") {
+    return new Response("jigインターンへようこそ！");
+  }
 
-  // ログインテスト
-  if (req.method === "POST" && pathname === "/authsample") {
+  // ログインできている場合，response.okがtrueになる
+  if (req.method === "POST" && pathname === "/users/auth") {
     let loggedIn, loginUserInfo;
     try {
       ({ loggedIn, loginUserInfo } = await isLoggedIn(req)); // 分割代入
@@ -26,43 +26,43 @@ export const authRouter = async (req) => {
     if (!loggedIn) {
       // isLoggedInが未ログインと判断した場合の処理
       // 検証に必要なデータがリクエストに含まれるか，DIDの登録，署名の検証，の3工程をまとめたエラーとなっているため注意
-      return new Response(
-        JSON.stringify({ message: "リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．" }),
-        { status: 400 }
-      );
+      const message = "リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．";
+      const body = { message: message };
+      return new Response(JSON.stringify(body), { status: 303, headers: { Location: "/login" } });
     } else {
       // 以下，ログインができている場合の処理
       const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
-      return new Response(
-        JSON.stringify({ message: "（エンドポイント/authsampleからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId })
-      );
+      const message = "（エンドポイント/authsampleからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId;
+      const body = { message: message, userId: userId, userName: userName, did: did };
+      console.log("redirect");
+      return new Response(JSON.stringify(body), { status: 303, headers: { Location: "/show" } });
     }
   }
 
   // タスクの一覧を要求されたとき
-  if (req.method === "POST" && pathname === "/tasks") {
-    let loggedIn, loginUserInfo;
-    try {
-      ({ loggedIn, loginUserInfo } = await isLoggedIn(req)); // 分割代入
-    } catch (e) {
-      console.error(e);
-      return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
-    }
+  // if (req.method === "POST" && pathname === "/tasks") {
+  //   let loggedIn, loginUserInfo;
+  //   try {
+  //     ({ loggedIn, loginUserInfo } = await isLoggedIn(req)); // 分割代入
+  //   } catch (e) {
+  //     console.error(e);
+  //     return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
+  //   }
 
-    if (!loggedIn) {
-      return new Response(
-        JSON.stringify({ message: "リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．" }),
-        { status: 400 }
-      );
-    } else {
-      const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
-      return new Response(JSON.stringify({ userId, taskListMock }), {
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-    }
-  }
+  //   if (!loggedIn) {
+  //     return new Response(
+  //       JSON.stringify({ message: "リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．" }),
+  //       { status: 400 }
+  //     );
+  //   } else {
+  //     const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
+  //     return new Response(JSON.stringify({ userId, taskListMock }), {
+  //       headers: {
+  //         "content-type": "application/json",
+  //       },
+  //     });
+  //   }
+  // }
 
   // リクエスト(ユーザ登録)
   if (req.method === "POST" && pathname === "/users/register") {
