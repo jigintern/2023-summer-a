@@ -14,18 +14,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   console.log(res);
+  const json = await res.json();
 
   if (!res.ok) {
     if (res.status === 303) {
-      location.href = "/login";
+      location.href = json.redirectURL;
     } else {
       // サーバーから成功ステータスが返ってこない場合(もしくはlocalStorageに認証情報がない)
-      const json = await res.json();
       elem.innerText = "エラー：" + json.message;
     }
   } else {
     // 成功の応答が返ってきた場合
-    const json = await res.json();
     elem.innerText = json.message;
   }
 });

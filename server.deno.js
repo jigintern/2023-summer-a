@@ -27,15 +27,14 @@ export const authRouter = async (req) => {
       // isLoggedInが未ログインと判断した場合の処理
       // 検証に必要なデータがリクエストに含まれるか，DIDの登録，署名の検証，の3工程をまとめたエラーとなっているため注意
       const message = "リクエストはサーバに到達しましたが，認証情報が不正であるか不足しています．再度ログインを行ってください．";
-      const body = { message: message };
-      return new Response(JSON.stringify(body), { status: 303, headers: { Location: "/login" } });
+      const body = { message: message, redirectURL: "/show" };
+      return new Response(JSON.stringify(body), { status: 303 });
     } else {
       // 以下，ログインができている場合の処理
       const [userId, userName, did] = [loginUserInfo.userId, loginUserInfo.userName, loginUserInfo.did];
       const message = "（エンドポイント/authsampleからの応答）あなたはログインに成功しています．ユーザ名: " + userName + ", ユーザID: " + userId;
-      const body = { message: message, userId: userId, userName: userName, did: did };
-      console.log("redirect");
-      return new Response(JSON.stringify(body), { status: 303, headers: { Location: "/show" } });
+      const body = { message: message, redirectURL: "/show", userId: userId, userName: userName, did: did };
+      return new Response(JSON.stringify(body), { status: 303 });
     }
   }
 
