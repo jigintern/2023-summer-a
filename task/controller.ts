@@ -59,7 +59,7 @@ export class TaskControllerImpl implements TaskController{
 			completed: completed,
 			tasks: task.rows.map((row) => {
 				return {
-					id: row.id,
+					id: row.Task_id,
 					name: row.description,
 					is_completed: row.is_completed,
 				};
