@@ -5,44 +5,53 @@ const uncompletedtTaskList = document.getElementById('uncompletedtTaskList');
 const progressValue=document.getElementById('progressValue');
 const userProgress = document.getElementById('userProgress');
 const userNameElement = document.getElementById('userName');
-const serverResponse =  document.getElementById("server_response");
+const serverResponse =  document.getElementById('server_response');
+const progressId=document.getElementById('progressId');
+const uncompletedtTask=document.getElementById('uncompletedtTask');
+const completedtTask=document.getElementById('completedtTask');
 
 const userID=getParam('userID');
 let allUserData,userData;
 
-try{
-    const url = `/tasks/${userID}`;
-    const options = {
-        method: "POST"
-    };
+window.onload=fetchDataAndInit();
 
-    allUserData = JSON.parse(await (await fetchWithDidFromLocalstorage(url,options)).text());
+async function fetchDataAndInit(){
 
-    if(allUserData.message)
-    {
-        showErrorMessage(`エラーメッセージ:${allUserData.message}`);
+    try{
+        const url = `/tasks/${userID}`;
+        const options = {
+            method: "POST"
+        };
+
+        allUserData = JSON.parse(await (await fetchWithDidFromLocalstorage(url,options)).text());
+        console.log(allUserData);
+
+        if(allUserData.message){
+            stopElement();
+            showErrorMessage(`エラーメッセージ:${allUserData.message}`);
+            return;
+        }
+
+        //userData = allUserData[`tasksMockUser${userID}`];
+        userData = allUserData["body"];
+        console.log(userData);
+
+        if(userID){
+            Init(userID);
+        }else{
+            const updateResult = document.getElementById('updateResult');
+            updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
+        }
+
+    }catch (error) {
+        stopElement();
+        console.error('エラー:', error);
+        showErrorMessage(`エラー:${error}`);
     }
-
-    userData = allUserData[`tasksMockUser${userID}`];
-
-    if(userID){
-        Init(userID);
-    }else
-    {
-        const updateResult = document.getElementById('updateResult');
-        updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
-    }
-
-}catch (error) {
-    console.error('An error occurred while fetching data:', error);
-    showErrorMessage(`データの取得に失敗しました :${error}`);
 }
 
 //タスクの初期化
-function Init() 
- {
-    console.log(userData);
-
+function Init() {
     userNameElement.textContent = userData.user;
     userProgress.value = userData.completed;
     progressValue.textContent = String(userData.completed);
@@ -110,14 +119,6 @@ function getParam(name, url) {
 // タスクのチェックボックスが変更されたときに実行される関数
 async function checkBoxChanged(taskNumber) {
 
-    // タスク内容の取得
-    const taskContent = document.querySelector(`#cb${taskNumber}`).nextSibling.textContent;
-    const newValue = document.querySelector(`#cb${taskNumber}`).checked;
-  
-    // 更新結果を表示するエリアにメッセージを表示
-    const updateResult = document.getElementById('updateResult');
-    updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
-
     const url = `/tasks`
     const options = {
         method: "PUT",
@@ -125,7 +126,7 @@ async function checkBoxChanged(taskNumber) {
         taskId: taskNumber,
         isCompleted: newValue
     }
-    
+
     const res = await(await fetchWithDidFromLocalstorage(url, options)).text();
 
     serverResponse.textContent = res;
@@ -133,7 +134,16 @@ async function checkBoxChanged(taskNumber) {
     if(res.message)
     {
         showErrorMessage(`データの取得に失敗しました :${res.message}`);
+        return;
     }
+
+    // タスク内容の取得
+    const taskContent = document.querySelector(`#cb${taskNumber}`).nextSibling.textContent;
+    const newValue = document.querySelector(`#cb${taskNumber}`).checked;
+  
+    // 更新結果を表示するエリアにメッセージを表示
+    const updateResult = document.getElementById('updateResult');
+    updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
 
     //保存していたjsonファイルの内容の書き換え
     userData.tasks[taskNumber].isCompleted=newValue;
@@ -155,3 +165,13 @@ function showErrorMessage(message) {
     errorContainer.style.display = 'none';
   }
   
+function stopElement(){
+    userNameElement.remove();
+    userProgress.remove();
+    progressValue.remove();
+    completedtTaskList.remove();
+    uncompletedtTaskList.remove();
+    progressId.remove();
+    uncompletedtTask.remove();
+    completedtTask.remove();
+}

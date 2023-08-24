@@ -34,7 +34,7 @@
     <div class="container">
       <div class="notification">
         <a href="/show" class="button is-link user-list-button is-pulled-right"><h3>ユーザー一覧へ</h3></a>
-        <h2 class="subtitle" style="margin-top: 20px;">進捗:<span id="progressValue"></span>%</h2>
+        <h2 id="progressId" class="subtitle" style="margin-top: 20px;">進捗:<span id="progressValue"></span>%</h2>
         <progress id="userProgress" class="progress is-primary" max="100"></progress>
       </div>
     </div>    
@@ -42,11 +42,11 @@
     <!-- タスク一覧の表示 -->
   <div class="container">
     <section class="section">
-      <details open>
+      <details id = "uncompletedtTask" open>
         <summary>未完了</summary>
         <div id="uncompletedtTaskList" class="box"></div>
     </details>
-      <details open>
+      <details id = "completedtTask" open>
         <summary>完了済み</summary>
           <div id="completedtTaskList" class="box"></div>
     </details>
