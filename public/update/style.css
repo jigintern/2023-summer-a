@@ -51,8 +51,6 @@
   input[type="checkbox"] + label {
     display: block;
     position: relative;
-    padding-left: 35px;
-    margin-bottom: 20px;
     font: 14px/20px 'Open Sans', Arial, sans-serif;
     color: #ddd;
     cursor: pointer;
@@ -69,9 +67,6 @@
     width: 20px;
     height: 20px;
     border: 1px solid #6cc0e5;
-    position: absolute;
-    left: 0;
-    top: 0;
     opacity: .6;
     -webkit-transition: all .12s, border-color .08s;
     transition: all .12s, border-color .08s;
@@ -99,4 +94,10 @@ body {
 .progress {
   width: 100%;
   max-width: 1000px;
+}
+
+.checkbox-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
