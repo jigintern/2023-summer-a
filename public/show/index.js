@@ -55,12 +55,14 @@ async function load(){
         tbody+="</tr>";
     }
     document.getElementById("tbody").innerHTML=tbody;
+    document.getElementById("tbody").classList.remove("ornamental");
     initInfo(json);
 }
 
 //ソート用
 document.querySelectorAll('th').forEach(elm => {
     elm.onclick = function () {
+        const tbody = document.getElementById("tbody"); //tableBody
         const columnNo = this.cellIndex; //クリックされた列番号
         const table = this.parentNode.parentNode.parentNode;
         const sortArray = []; //クリックした列のデータを全て格納する配列
@@ -71,15 +73,17 @@ document.querySelectorAll('th').forEach(elm => {
             column.value = table.rows[r].cells[columnNo].textContent;
             sortArray.push(column);
         }
+
+        tbody.classList.remove("ornamental");
         if (columnNo === 0) { //ID
             sortArray.sort(compareNumber);
         } else if (columnNo === 1){ //なまえ
             sortArray.sort(compareString);
         } else { //%
             sortArray.sort(comparePercentDesc);
+            tbody.classList.add("ornamental");
         }
         //ソート後のTRオブジェクトを順番にtbodyへ追加（移動）
-        const tbody = document.getElementById("tbody");
         for (let i = 0; i < sortArray.length; i++) {
             tbody.appendChild(sortArray[i].row);
         }
@@ -123,7 +127,7 @@ function initInfo(response){
             let text="<ul>";
             for(let i=0; i<tasks.length; ++i){
                 text+="<li>"+tasks[i].name+" ";
-                if(tasks[i].isCompleted===true)
+                if(tasks[i].is_completed==1)
                     text+="&#10004;"//チェック
                 else
                     text+="&#10006;"//バツ
