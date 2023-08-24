@@ -49,8 +49,10 @@ button:hover {
 .me {
     background-color: azure;
 }
+.me:hover {
+    background-color: rgb(213, 255, 255);
+}
 
-  
 table {
     width: 100%;
     border-collapse: collapse;
@@ -66,14 +68,78 @@ th {
     background-color: #f5f5f5;
     font-weight: bold;
 }
+th:hover {
+    background-color: #eeeeee;
+}
 
 td > div {
     display: flex;
     align-items: center;
+}
+tbody tr:hover {
+    background-color: #eeeeee;
 }
   
 progress {
     width: 100%;
     flex: 1;
     margin-left: 10px;
+}
+
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明の背景色 */
+    overflow: auto;
+}
+  
+#modalContents {
+    background-color: #fff; /* モーダルコンテンツの背景色 */
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 60%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+  
+#modalHead {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+  
+#modalBody {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-left: 20px;
+}
+
+.ornamental tr:nth-child(1) td:nth-child(2):before{
+    content: "\1F947"
+}
+.ornamental tr:nth-child(2) td:nth-child(2):before{
+    content: "\1F948"
+}
+.ornamental tr:nth-child(3) td:nth-child(2):before{
+    content: "\1F949"
+}
+.ornamental tr:last-child td:nth-child(2):before{
+    content: "\1F4A9"
 }
