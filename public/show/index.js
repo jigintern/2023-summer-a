@@ -1,93 +1,12 @@
+import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
+
 // window.onload=load;
 document.getElementById("load").onclick = load;
 
-
-document.getElementById("test").addEventListener("click", ()=>{
-    const response ={
-        access_user_id: 0,
-        body: 
-        [
-            {
-                id: 0,
-                user: "shuya",
-                completed: 80,
-                tasks: [ // あとで実装するかも
-                    {
-                        id: 0,
-                        name: "漢字どりる40ページまで",
-                        isCompleted: true
-                    }, 
-                    {
-                        id: 1,
-                        name: "漢字どりる80ページまで",
-                        isCompleted: false
-                    },
-                ]
-            },
-            {
-                id: 1,
-                user: "ooi",
-                completed: 95,
-                tasks: [ // あとで実装するかも
-                    {
-                        id: 0,
-                        name: "漢字どりる40ページまで",
-                        isCompleted: true
-                    }, 
-                    {
-                        id: 1,
-                        name: "漢字どりる80ページまで",
-                        isCompleted: false
-                    },
-                ]
-            }
-        ]
-    }
-    console.log(response.body.findIndex(item => item.id===0));
-
-
-    const id=response.access_user_id;
-    const list=response.body;
-    document.getElementById("update").addEventListener("click", ()=>{location.href='../update?userID='+id});
-
-    //table作成
-    let tbody="";
-
-    //自分
-    tbody+="<tr class=\'me\'>";
-    tbody+="<td>"+list[id].id+"</td>"+
-    "<td>"+list[id].user+"</td>"+
-    "<td><div>"+list[id].completed+"%"+"<progress max=\"100\" value="+list[id].completed+"></progress></div></td>";
-    tbody+="</tr>";
-
-    //自分以外
-    for(let i=0; i<list.length; ++i){
-        if(id===i) continue;
-        tbody+="<tr>";
-        tbody+="<td>"+list[i].id+"</td>"+
-        "<td>"+list[i].user+"</td>"+
-        "<td><div>"+list[i].completed+"%"+"<progress max=\"100\" value="+list[i].completed+"></progress></div></td>";
-        tbody+="</tr>";
-    }
-    document.getElementById("tbody").innerHTML=tbody;
-    initInfo(response);
-});
-
 async function load(){
-    const response = await fetch('/tasks');
-    // const body = { //エラー時確認用
-    //     message: "DBに登録されていません",
-    //     redirectURL: "/register",
-    // };
-    // const response = new Response(JSON.stringify(body), {
-    //     status: 303,
-    //     headers: {
-    //       "content-type": "application/json",
-    //     },
-    // });
-
+    const response = await fetchWithDidFromLocalstorage('/tasks', {method: "POST"});
     const json = await response.json();
-
+    
     //エラー処理
     if (!response.ok) {
         const errMsg = await json.message;
@@ -99,7 +18,7 @@ async function load(){
             document.getElementById("redirect").addEventListener("click", ()=>{location.href=json.redirectURL;});
             document.getElementById("redirect").innerText="新規登録";
         }
-
+        
         //ボタン無効化
         const DOMload=document.getElementById("load");
         DOMload.disabled="disabled";
@@ -107,34 +26,36 @@ async function load(){
         const DOMupdate=document.getElementById("update");
         DOMupdate.disabled="disabled";
         DOMupdate.style.backgroundColor="#0056b3";
-
+        
         return;
     }
-
-    const id=json.userId;
-    const list=json.taskListMock;
+    
+    const id=json.access_user_id;
+    const list=json.body;
+    const startId=list[0].user_id;
+    document.getElementById("update").addEventListener("click", ()=>{location.href='../update?userID='+id});
 
     //table作成
     let tbody="";
-
+    
     //自分
     tbody+="<tr class=\'me\'>";
-    tbody+="<td>"+list[id].id+"</td>"+
-    "<td>"+list[id].user+"</td>"+
-    "<td><div>"+list[id].completed+"%"+"<progress max=\"100\" value="+list[id].completed+"></progress></div></td>";
+    tbody+="<td>"+list[id-startId].user_id+"</td>"+
+    "<td>"+list[id-startId].user_name+"</td>"+
+    "<td><div>"+list[id-startId].completed+"%"+"<progress max=\"100\" value="+list[id-startId].completed+"></progress></div></td>";
     tbody+="</tr>";
-
+    
     //自分以外
     for(let i=0; i<list.length; ++i){
-        if(id===i) continue;
+        if(id-startId===i) continue;
         tbody+="<tr>";
-        tbody+="<td>"+list[i].id+"</td>"+
-        "<td>"+list[i].user+"</td>"+
+        tbody+="<td>"+list[i].user_id+"</td>"+
+        "<td>"+list[i].user_name+"</td>"+
         "<td><div>"+list[i].completed+"%"+"<progress max=\"100\" value="+list[i].completed+"></progress></div></td>";
         tbody+="</tr>";
     }
     document.getElementById("tbody").innerHTML=tbody;
-    initInfo();
+    initInfo(json);
 }
 
 //ソート用
@@ -154,7 +75,7 @@ document.querySelectorAll('th').forEach(elm => {
             sortArray.sort(compareNumber);
         } else if (columnNo === 1){ //なまえ
             sortArray.sort(compareString);
-        } else {
+        } else { //%
             sortArray.sort(comparePercentDesc);
         }
         //ソート後のTRオブジェクトを順番にtbodyへ追加（移動）
@@ -164,8 +85,6 @@ document.querySelectorAll('th').forEach(elm => {
         }
     };
 });
-
-
 
 //数値ソート（昇順）
 function compareNumber(a, b)
@@ -192,23 +111,27 @@ function comparePercentDesc(a, b)
 function initInfo(response){
     document.querySelectorAll('td').forEach(elm => {
         elm.onclick = function() {
+            //モーダルの表示
             document.getElementById("modal").style.display = "block";
+            //インデックスの取得
             const targetId=this.parentNode.firstChild.textContent;
-            const targetIndex=response.body.findIndex(item => item.id==targetId);
-            document.getElementById("modalhead").innerText=response.body[targetIndex].user;
-
+            const targetIndex=response.body.findIndex(item => item.user_id==targetId);
+            //名前の取得
+            document.getElementById("modalHead").innerText=response.body[targetIndex].user_name;
+            //詳細進捗の取得
             const tasks=response.body[targetIndex].tasks;
-            console.log(tasks);
-            let text="";
+            let text="<ul>";
             for(let i=0; i<tasks.length; ++i){
-                text+=tasks[i].id+". "+tasks[i].name+" ";
+                text+="<li>"+tasks[i].name+" ";
                 if(tasks[i].isCompleted===true)
-                    text+="O";
+                    text+="&#10004;"//チェック
                 else
-                    text+="X"
-                text+='\n';
+                    text+="&#10006;"//バツ
+                text+="<il>";
             }
-            document.getElementById("modalbody").innerText=text;
+            text+="</ul>";
+
+            document.getElementById("modalBody").innerHTML=text;
         };
     });
 }
