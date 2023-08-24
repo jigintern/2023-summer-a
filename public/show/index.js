@@ -137,6 +137,7 @@ async function load(){
     initInfo();
 }
 
+//ソート用
 document.querySelectorAll('th').forEach(elm => {
     elm.onclick = function () {
         const columnNo = this.cellIndex; //クリックされた列番号
@@ -187,6 +188,7 @@ function comparePercentDesc(a, b)
 	return b.value.split('%')[0] - a.value.split('%')[0];
 }
 
+//詳細表示用
 function initInfo(response){
     document.querySelectorAll('td').forEach(elm => {
         elm.onclick = function() {
