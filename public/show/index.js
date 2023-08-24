@@ -1,6 +1,6 @@
 import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
 
-// window.onload=load;
+window.onload=load;
 document.getElementById("load").onclick = load;
 
 async function load(){
