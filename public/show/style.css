@@ -131,15 +131,30 @@ progress {
     margin-left: 20px;
 }
 
-.ornamental tr:nth-child(1) td:nth-child(2):before{
-    content: "\1F947"
+/* .ornamental tr:nth-child(1) */
+.comp {
+    color: white;
+    text-shadow:
+        1px 1px 2px white,
+        0 0 1em blue,
+        0 0 0.2em blue;
+    /* content: "\1F947" */
+    background: linear-gradient(to right,#e60000,#f39800,#fff100,#009944,#0068b7,#1d2088,#920783,#e60000) 0 / 200%;
+    animation: 0.5s example5 linear infinite;
 }
+
+@keyframes example5{
+    100% { background-position: 200%; }
+}
+
+/*
 .ornamental tr:nth-child(2) td:nth-child(2):before{
     content: "\1F948"
 }
 .ornamental tr:nth-child(3) td:nth-child(2):before{
     content: "\1F949"
 }
-.ornamental tr:last-child td:nth-child(2):before{
+*/
+.worst td:nth-child(2):before{
     content: "\1F4A9"
 }
