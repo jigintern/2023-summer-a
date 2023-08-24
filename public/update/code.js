@@ -97,7 +97,6 @@ function createTaskSet(task, isMine) {
     box.appendChild(columns);
   
     // チェックボックス描画
-    if (isMine) {
       // カラムの作成
       const column = document.createElement('div');
       column.classList.add('column', 'is-1', 'checkbox-container');
@@ -108,6 +107,7 @@ function createTaskSet(task, isMine) {
       newValue.type = 'checkbox';
       newValue.id = `cb${task.id}`;
       newValue.required = true;
+      newValue.disabled =!isMine;
       newValue.checked = task.is_completed;
   
       const customCheckBox = document.createElement('label');
@@ -119,17 +119,16 @@ function createTaskSet(task, isMine) {
       column.appendChild(customCheckBox);
   
       newValue.addEventListener('change', () => checkBoxChanged(task.id));
-    }
   
     // タスク内容の描画
-    const column = document.createElement('div');
-    column.classList.add('column');
-    columns.appendChild(column);
+    const subColumn = document.createElement('div');
+    subColumn.classList.add('column');
+    columns.appendChild(subColumn);
   
     const taskTitle = document.createElement('p');
     taskTitle.classList.add('title');
     taskTitle.textContent = `${task.name}`;
-    column.appendChild(taskTitle);
+    subColumn.appendChild(taskTitle);
   
     return (box);
   }
