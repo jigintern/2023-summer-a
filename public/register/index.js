@@ -50,7 +50,7 @@ document.getElementById("submit").onclick = async (event) => {
 // [コールバックを登録] DIDをファイルとして保存ボタンの処理
 // HTML要素からdid, passをとってきて，外部ライブラリで保存処理呼び出すだけ
 document.getElementById("saveBtn").onclick = async () => {
-  const did = document.getElementById("did").value;
-  const password = document.getElementById("password").value;
+  const did = localStorage.getItem("did");
+  const password = localStorage.getItem("password");
   DIDAuth.savePem(did, password);
 };
