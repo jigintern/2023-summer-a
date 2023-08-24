@@ -15,7 +15,7 @@ const fetchWithDid = async (url, method, options, did, password) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(body)
   });
 
   return response;
