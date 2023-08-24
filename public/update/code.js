@@ -9,6 +9,7 @@ const serverResponse =  document.getElementById('server_response');
 const progressId=document.getElementById('progressId');
 const uncompletedtTask=document.getElementById('uncompletedtTask');
 const completedtTask=document.getElementById('completedtTask');
+const hideButton=document.getElementById('hideButton');
 
 const userID=getParam('userID');
 
@@ -17,6 +18,9 @@ let allUserData,userData;
 window.onload=fetchDataAndInit();
 
 async function fetchDataAndInit(){
+    if(hideButton){
+   hideButton.addEventListener('click', () => hideErrorMessage());
+    }
 
     try{
         const url = `/tasks/${userID}`;
@@ -35,7 +39,6 @@ async function fetchDataAndInit(){
 
         const accessUserId=allUserData.access_user_id;
 
-        //userData = allUserData[`tasksMockUser${userID}`];
         userData = allUserData["body"];
         console.log(userData);
 

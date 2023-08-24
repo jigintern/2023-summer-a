@@ -26,7 +26,7 @@
     <!-- 進捗とプログレスバーの表示 -->
     <div class="container">
       <div id="errorContainer" class="notification is-danger" style="display: none;">
-        <button class="delete" onclick="hideErrorMessage()"></button>
+        <button class="delete" id="hideButton"></button>
         <p id="errorMessage"></p>
       </div>
     </div>
@@ -35,7 +35,7 @@
       <div class="notification">
         <a href="/show" class="button is-link user-list-button is-pulled-right"><h3>ユーザー一覧へ</h3></a>
         <h2 id="progressId" class="subtitle" style="margin-top: 20px;">進捗:<span id="progressValue"></span>%</h2>
-        <progress id="userProgress" class="progress is-primary" max="100"></progress>
+        <progress id="userProgress" class="progress is-primary is-pulled-center" max="100"></progress>
       </div>
     </div>    
 
