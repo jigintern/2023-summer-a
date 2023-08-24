@@ -108,38 +108,38 @@ progress {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* 半透明の背景色 */
     overflow: auto;
-  }
+}
   
-  #modalContents {
+#modalContents {
     background-color: #fff; /* モーダルコンテンツの背景色 */
     margin: 10% auto;
     padding: 20px;
     border-radius: 8px;
     width: 60%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+}
   
-  #modalHead {
+#modalHead {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
-  }
+}
   
-  #modalBody {
+#modalBody {
     font-size: 16px;
     line-height: 1.5;
     margin-left: 20px;
-  }
+}
 
-  .ornamental tr:nth-child(1) td:nth-child(2):before{
+.ornamental tr:nth-child(1) td:nth-child(2):before{
     content: "\1F947"
-  }
-  .ornamental tr:nth-child(2) td:nth-child(2):before{
+}
+.ornamental tr:nth-child(2) td:nth-child(2):before{
     content: "\1F948"
-  }
-  .ornamental tr:nth-child(3) td:nth-child(2):before{
+}
+.ornamental tr:nth-child(3) td:nth-child(2):before{
     content: "\1F949"
-  }
-  .ornamental tr:last-child td:nth-child(2):before{
+}
+.ornamental tr:last-child td:nth-child(2):before{
     content: "\1F4A9"
-  }
+}
