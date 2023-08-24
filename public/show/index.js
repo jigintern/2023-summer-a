@@ -66,15 +66,37 @@ document.querySelectorAll('th').forEach(elm => {
         const columnNo = this.cellIndex; //クリックされた列番号
         const table = this.parentNode.parentNode.parentNode;
         const sortArray = []; //クリックした列のデータを全て格納する配列
+        let min=100;
+
+        //装飾用クラス削除
+        document.querySelectorAll('.comp').forEach(elm => {elm.classList.remove("comp")});
+        document.querySelectorAll('.worst').forEach(elm => {elm.classList.remove("worst")});
+        tbody.classList.remove("ornamental");
+
         for (let r = 1; r < table.rows.length; r++) {
             //行番号と値を配列に格納
             const column = new Object;
             column.row = table.rows[r];
             column.value = table.rows[r].cells[columnNo].textContent;
             sortArray.push(column);
+
+            //完遂者にクラス付与、最下位計算
+            if(columnNo==2){
+                const val=Number(column.value.split('%')[0]);
+                if(val==100)
+                    column.row.classList.add("comp");
+                min=Math.min(val,min);
+            }
         }
 
-        tbody.classList.remove("ornamental");
+        //最下位にクラス付与
+        if(columnNo==2&&min!=100){
+            for(let r = 0; r < table.rows.length-1; r++){
+                if(document.getElementById("tbody").rows[r].cells[2].textContent==min+'%')
+                    document.getElementById("tbody").rows[r].classList.add("worst");
+            }
+        }
+
         if (columnNo === 0) { //ID
             sortArray.sort(compareNumber);
         } else if (columnNo === 1){ //なまえ
