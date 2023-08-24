@@ -1,8 +1,12 @@
+import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
+
 window.onload = load;
 document.getElementById("load").onclick = load;
 
 async function load() {
-  const response = await fetch("/tasks");
+  const response = await fetchWithDidFromLocalstorage("/tasks", {
+    method: "POST",
+  });
   // const body = { //エラー時確認用
   //     message: "DBに登録されていません",
   //     redirectURL: "/register",
