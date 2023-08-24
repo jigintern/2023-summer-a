@@ -161,7 +161,7 @@ async function checkBoxChanged(taskNumber) {
 
     //保存していたjsonファイルの内容の書き換え
     userData.tasks.filter(task => task.id===taskNumber)[0].is_completed=newValue;
-    Init(userID);
+    fetchDataAndInit(userID);
   }
   
   // エラーメッセージを表示する関数
