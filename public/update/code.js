@@ -68,10 +68,8 @@ function Init(accessUserId) {
 
     // JSONデータからタスクを動的に生成
     userData.tasks.forEach((task) => {
-        console.log(`ccc${typeof accessUserId}`);
-        console.log(`ddd${typeof userData.user_id}`);
-      const taskSet = createTaskSet(task,accessUserId===userData.user_id);
-      if(task.isCompleted)
+      const taskSet = createTaskSet(task,Number(accessUserId)===Number(userData.user_id));
+      if(task.is_completed)
        completedtTaskList.appendChild(taskSet);
       else
       uncompletedtTaskList.appendChild(taskSet);
@@ -94,13 +92,12 @@ function createTaskSet(task,isMine) {
   taskTitle.classList.add('title');
   taskTitle.textContent = `${task.id}: ${task.name}`;
 
-  console.log(isMine);
   if(isMine){
     const newValue = document.createElement('input');
     newValue.type = 'checkbox';
     newValue.id = `cb${task.id}`;
     newValue.required = true;
-    newValue.checked = task.isCompleted;
+    newValue.checked = task.is_completed;
 
     const customCheckBox = document.createElement('label');
     customCheckBox.setAttribute('for', `cb${task.id}`);
@@ -138,29 +135,26 @@ async function checkBoxChanged(taskNumber) {
     const url = `/tasks`
     const options = {
         method: "PUT",
-        userId: userID,
+        userId: Number(userID),
         taskId: taskNumber,
         isCompleted: newValue
     }
 
-    const res = await(await fetchWithDidFromLocalstorage(url, options)).text();
+    const res = await(await fetchWithDidFromLocalstorage(url, options)).json();
 
     serverResponse.textContent = res;
 
     if(res.message)
     {
+        console.log(`データの取得に失敗しました :${res.message}`);
         showErrorMessage(`データの取得に失敗しました :${res.message}`);
+        Init(userID);
         return;
     }
   
     // 更新結果を表示するエリアにメッセージを表示
     const updateResult = document.getElementById('updateResult');
     updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
-
-    console.log(`aaa:${newValue}`);
-    console.log(`bbb:${taskNumber}`);
-    console.log(userData);
-    console.log(userData.tasks[taskNumber]);
 
     //保存していたjsonファイルの内容の書き換え
     userData.tasks.filter(task => task.id===taskNumber)[0].is_completed=newValue;
