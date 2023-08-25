@@ -96,10 +96,6 @@ document.querySelectorAll('th').forEach(elm => {
         //装飾用クラス削除
         document.querySelectorAll('.comp').forEach(elm => {elm.classList.remove("comp")});
         document.querySelectorAll('.worst').forEach(elm => {elm.classList.remove("worst")});
-        document.querySelectorAll('.first').forEach(elm => {elm.classList.remove("first")});
-        document.querySelectorAll('.second').forEach(elm => {elm.classList.remove("second")});
-        document.querySelectorAll('.third').forEach(elm => {elm.classList.remove("third")});
-
 
         for (let r = 1; r < table.rows.length; r++) {
             //行番号と値を配列に格納

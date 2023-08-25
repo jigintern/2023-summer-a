@@ -49,11 +49,35 @@ async function fetchDataAndInit(){
             updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
         }
 
+        if (userData.completed === 100) {
+            addCompletedEffect();
+        } else {
+            removeCompletedEffect();
+        }
+
     }catch (error) {
         stopElement();
         console.error('エラー:', error);
         showErrorMessage(`エラー:${error}`);
     }
+}
+
+function addCompletedEffect() {
+    const body = document.querySelector('body');
+    const taskList = document.getElementById('completedtTaskList');
+    const not = document.getElementById('notification');
+    body.classList.add('is-success');
+    taskList.classList.add('is-success');
+    not.classList.add('is-success');
+}
+
+function removeCompletedEffect() {
+    const body = document.querySelector('body');
+    const taskList = document.getElementById('completedtTaskList');
+    const not = document.getElementById('notification');
+    body.classList.remove('is-success');
+    taskList.classList.remove('is-success');
+    not.classList.remove('is-success');
 }
 
 //タスクの初期化
@@ -64,6 +88,10 @@ function Init(accessUserId) {
     userNameElement.textContent = userData.user_name;
     userProgress.value = userData.completed;
     progressValue.textContent = String(userData.completed);
+
+    if (userData.completed === 100) {
+        addCompletedEffect();
+    }
 
     clearTaskList(completedtTaskList);
     clearTaskList(uncompletedtTaskList);
@@ -170,7 +198,7 @@ async function checkBoxChanged(taskNumber) {
         Init(userID);
         return;
     }
-  
+
     // 更新結果を表示するエリアにメッセージを表示
     const updateResult = document.getElementById('updateResult');
     updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
