@@ -10,6 +10,8 @@ const progressId=document.getElementById('progressId');
 const uncompletedtTask=document.getElementById('uncompletedtTask');
 const completedtTask=document.getElementById('completedtTask');
 const hideButton=document.getElementById('hideButton');
+const titleText=document.getElementById('titleText');
+const taskProcess=document.getElementById('taskProcess');
 
 const userID=getParam('userID');
 
@@ -65,25 +67,39 @@ async function fetchDataAndInit(){
 function addCompletedEffect() {
     const body = document.querySelector('body');
     const taskList = document.getElementById('completedtTaskList');
-    const not = document.getElementById('notification');
+    //const not = document.getElementById('notification');
     body.classList.add('is-success');
     taskList.classList.add('is-success');
-    not.classList.add('is-success');
+    //not.classList.add('is-success');
 }
 
 function removeCompletedEffect() {
     const body = document.querySelector('body');
     const taskList = document.getElementById('completedtTaskList');
-    const not = document.getElementById('notification');
+    //const not = document.getElementById('notification');
     body.classList.remove('is-success');
     taskList.classList.remove('is-success');
-    not.classList.remove('is-success');
+    //not.classList.remove('is-success');
 }
 
 //タスクの初期化
 function Init(accessUserId) {
     
     console.log(userData.tasks);
+
+    const isMine=Number(accessUserId)===Number(userData.user_id);
+
+    console.log(taskProcess);
+
+    if(isMine)
+    {
+        titleText.innerText="タスク更新";
+        taskProcess.innerText="タスク更新";
+    }else
+    {
+        titleText.innerText="タスク閲覧";
+        taskProcess.innerText="タスク閲覧";
+    }
 
     userNameElement.textContent = userData.user_name;
     userProgress.value = userData.completed;
@@ -99,7 +115,7 @@ function Init(accessUserId) {
 
     // JSONデータからタスクを動的に生成
     userData.tasks.forEach((task) => {
-      const taskSet = createTaskSet(task,Number(accessUserId)===Number(userData.user_id));
+      const taskSet = createTaskSet(task,isMine);
       if(task.is_completed)
        completedtTaskList.appendChild(taskSet);
       else
@@ -175,9 +191,13 @@ function getParam(name, url) {
 // タスクのチェックボックスが変更されたときに実行される関数
 async function checkBoxChanged(taskNumber) {
 
+
     // タスク内容の取得
     const taskContent = document.querySelector(`#cb${taskNumber}`).nextSibling.textContent;
-    const newValue = document.querySelector(`#cb${taskNumber}`).checked;
+    const checkBox=document.querySelector(`#cb${taskNumber}`);
+    const newValue = checkBox.checked;
+
+    checkBox.disabled=true;
 
     const url = `/tasks`
     const options = {
@@ -189,7 +209,7 @@ async function checkBoxChanged(taskNumber) {
 
     const res = await(await fetchWithDidFromLocalstorage(url, options)).json();
 
-    serverResponse.textContent = res;
+    //serverResponse.textContent = res;
 
     if(res.message)
     {
@@ -198,10 +218,6 @@ async function checkBoxChanged(taskNumber) {
         Init(userID);
         return;
     }
-
-    // 更新結果を表示するエリアにメッセージを表示
-    const updateResult = document.getElementById('updateResult');
-    updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
 
     //保存していたjsonファイルの内容の書き換え
     userData.tasks.filter(task => task.id===taskNumber)[0].is_completed=newValue;
