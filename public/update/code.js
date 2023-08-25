@@ -191,9 +191,13 @@ function getParam(name, url) {
 // タスクのチェックボックスが変更されたときに実行される関数
 async function checkBoxChanged(taskNumber) {
 
+
     // タスク内容の取得
     const taskContent = document.querySelector(`#cb${taskNumber}`).nextSibling.textContent;
-    const newValue = document.querySelector(`#cb${taskNumber}`).checked;
+    const checkBox=document.querySelector(`#cb${taskNumber}`);
+    const newValue = checkBox.checked;
+
+    checkBox.disabled=true;
 
     const url = `/tasks`
     const options = {
