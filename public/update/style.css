@@ -115,3 +115,9 @@ body {
 @keyframes example5{
   100% { background-position: 400%; }
 }
+
+.checkbox-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
