@@ -5,6 +5,7 @@ import { serveDir } from 'https://deno.land/std@0.194.0/http/file_server.ts?s=se
 
 import { taskRouter } from "./task/route.ts";
 import { authRouter } from "./server.deno.js";
+import { externalAPIRouter } from './task/externalAPI.ts';
 
 import { Client } from "https://deno.land/x/mysql@v2.11.0/mod.ts";
 import { connectionParam } from "./env.ts";
@@ -25,6 +26,8 @@ serve(async (req: Request) => {
 		return await authRouter(req);
 	} else if (req.method === "POST" && pathname === "/logintest") {
 		return await authRouter(req);
+	} else if (pathname.startsWith("/api")) {
+		return await externalAPIRouter(req);
 	}
 
 	return serveDir(req, {
