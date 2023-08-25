@@ -3,6 +3,25 @@ import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
 window.onload=load;
 document.getElementById("load").onclick = load;
 
+async function gptComment(top, me) {
+    const comment=document.getElementById("comment");
+    comment.classList.add("empty");
+
+    comment.innerText="";    
+    const message="あなたは小6のクラスを受け持つ担任です。彼の宿題の進捗に対してなにか、やる気が出るような面白い言葉を50文字程度でおねがいします。1位の進捗は"+top+"%で彼の進捗は"+me+"%です";
+    const body={
+        method: "POST",
+        prompt:message
+    }
+    console.log(body);
+    const response=await fetchWithDidFromLocalstorage("/api/chat", body);
+    const json=await response.json();
+    if(!json.message.includes('error')){
+        comment.innerText=json.message;
+        comment.classList.remove("empty");
+    }
+}
+
 async function load(){
     const response = await fetchWithDidFromLocalstorage('/tasks', {method: "POST"});
     const json = await response.json();
@@ -46,6 +65,7 @@ async function load(){
     tbody+="</tr>";
     
     //自分以外
+    let top=list[id-startId].completed;
     for(let i=0; i<list.length; ++i){
         if(id-startId===i) continue;
         tbody+="<tr>";
@@ -53,10 +73,11 @@ async function load(){
         "<td>"+list[i].user_name+"</td>"+
         "<td><div>"+list[i].completed+"%"+"<progress max=\"100\" value="+list[i].completed+"></progress></div></td>";
         tbody+="</tr>";
+        top=Math.max(top, list[i].completed);
     }
     document.getElementById("tbody").innerHTML=tbody;
-    document.getElementById("tbody").classList.remove("ornamental");
     initInfo(json);
+    gptComment(top,list[id-startId].completed);
 }
 
 //ソート用
@@ -67,11 +88,16 @@ document.querySelectorAll('th').forEach(elm => {
         const table = this.parentNode.parentNode.parentNode;
         const sortArray = []; //クリックした列のデータを全て格納する配列
         let min=100;
+        let first=-1;
+        let second=-1;
+        let third=-1;
 
         //装飾用クラス削除
         document.querySelectorAll('.comp').forEach(elm => {elm.classList.remove("comp")});
         document.querySelectorAll('.worst').forEach(elm => {elm.classList.remove("worst")});
-        tbody.classList.remove("ornamental");
+        document.querySelectorAll('.first').forEach(elm => {elm.classList.remove("first")});
+        document.querySelectorAll('.second').forEach(elm => {elm.classList.remove("second")});
+        document.querySelectorAll('.third').forEach(elm => {elm.classList.remove("third")});
 
         for (let r = 1; r < table.rows.length; r++) {
             //行番号と値を配列に格納
@@ -80,22 +106,44 @@ document.querySelectorAll('th').forEach(elm => {
             column.value = table.rows[r].cells[columnNo].textContent;
             sortArray.push(column);
 
-            //完遂者にクラス付与、最下位計算
+            //完遂者にクラス付与、最下位計算、上位計算
             if(columnNo==2){
                 const val=Number(column.value.split('%')[0]);
                 if(val==100)
                     column.row.classList.add("comp");
                 min=Math.min(val,min);
-            }
-        }
 
-        //最下位にクラス付与
-        if(columnNo==2&&min!=100){
-            for(let r = 0; r < table.rows.length-1; r++){
-                if(document.getElementById("tbody").rows[r].cells[2].textContent==min+'%')
-                    document.getElementById("tbody").rows[r].classList.add("worst");
+                if(val>first){
+                    third=second;
+                    second=first;
+                    first=val;
+                } else if (val>second) {
+                    third=second;
+                    second=val;
+                } else if (val>third) {
+                    third=val;
+                }
             }
         }
+        //最下位にクラス付与
+        if(columnNo==2){
+            for(let r = 0; r < table.rows.length-1; r++){
+                if(first!=-1&&document.getElementById("tbody").rows[r].cells[2].textContent==first+'%')
+                    document.getElementById("tbody").rows[r].classList.add("first");
+                if(second!=-1&&document.getElementById("tbody").rows[r].cells[2].textContent==second+'%')
+                    document.getElementById("tbody").rows[r].classList.add("second");
+                if(third!=-1&&document.getElementById("tbody").rows[r].cells[2].textContent==third+'%')
+                    document.getElementById("tbody").rows[r].classList.add("third");
+            }
+
+            if(min!=100) {
+                for(let r = 0; r < table.rows.length-1; r++){
+                    if(document.getElementById("tbody").rows[r].cells[2].textContent==min+'%')
+                        document.getElementById("tbody").rows[r].classList.add("worst");
+                }
+            }
+        }
+        
 
         if (columnNo === 0) { //ID
             sortArray.sort(compareNumber);
@@ -103,7 +151,6 @@ document.querySelectorAll('th').forEach(elm => {
             sortArray.sort(compareString);
         } else { //%
             sortArray.sort(comparePercentDesc);
-            tbody.classList.add("ornamental");
         }
         //ソート後のTRオブジェクトを順番にtbodyへ追加（移動）
         for (let i = 0; i < sortArray.length; i++) {
@@ -143,7 +190,9 @@ function initInfo(response){
             const targetId=this.parentNode.firstChild.textContent;
             const targetIndex=response.body.findIndex(item => item.user_id==targetId);
             //名前の取得
-            document.getElementById("modalHead").innerText=response.body[targetIndex].user_name;
+            document.getElementById("modalHead").innerHTML="<div>"+response.body[targetIndex].user_name+"</div>";
+            document.getElementById("modalHead").innerHTML+=
+            "<button onclick=\"location.href='../update?userID="+targetId+"'\" >詳細</button>";
             //詳細進捗の取得
             const tasks=response.body[targetIndex].tasks;
             let text="<ul>";

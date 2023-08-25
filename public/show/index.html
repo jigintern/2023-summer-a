@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
     <title>進捗確認</title>
     <script type="module" src="/show/index.js"></script>
     <link rel="stylesheet" type="text/css" href="/show/style.css" />
+    <link rel="icon" href="/img/min-pro.svg" />
   </head>
   <body>
-    <button id="load">更新</button>
-    <button id="update">編集</button>
+    <div id="header">
+      <button id="load">更新</button>
+      <button id="update">編集</button>
+      <div id="comment" class="empty"></div>
+    </div>
     <!-- <button id="test">test</button> -->
 
     <div id="error">
@@ -20,24 +24,21 @@
     <div id="contents">
       <table id="table">
         <thead id="thead">
-          <tr><th>ID</th><th>USER</th><th>COMPLETED</th></tr>
+          <tr>
+            <th>ID</th>
+            <th>USER</th>
+            <th>COMPLETED</th>
+          </tr>
         </thead>
-        <tbody id=tbody>
-          
-        </tbody>
+        <tbody id="tbody"></tbody>
       </table>
     </div>
 
     <div id="modal">
       <div id="modalContents">
-        <div id="modalHead">
-
-        </div>
-        <div id="modalBody">
-
-        </div>
+        <div id="modalHead"></div>
+        <div id="modalBody"></div>
       </div>
     </div>
-
   </body>
 </html>
