@@ -67,11 +67,18 @@ document.querySelectorAll('th').forEach(elm => {
         const table = this.parentNode.parentNode.parentNode;
         const sortArray = []; //クリックした列のデータを全て格納する配列
         let min=100;
+        let first=-1;
+        let second=-1;
+        let third=-1;
 
         //装飾用クラス削除
         document.querySelectorAll('.comp').forEach(elm => {elm.classList.remove("comp")});
         document.querySelectorAll('.worst').forEach(elm => {elm.classList.remove("worst")});
         tbody.classList.remove("ornamental");
+        document.querySelectorAll('.first').forEach(elm => {elm.classList.remove("first")});
+        document.querySelectorAll('.second').forEach(elm => {elm.classList.remove("second")});
+        document.querySelectorAll('.third').forEach(elm => {elm.classList.remove("third")});
+
 
         for (let r = 1; r < table.rows.length; r++) {
             //行番号と値を配列に格納
@@ -80,22 +87,44 @@ document.querySelectorAll('th').forEach(elm => {
             column.value = table.rows[r].cells[columnNo].textContent;
             sortArray.push(column);
 
-            //完遂者にクラス付与、最下位計算
+            //完遂者にクラス付与、最下位計算、上位計算
             if(columnNo==2){
                 const val=Number(column.value.split('%')[0]);
                 if(val==100)
                     column.row.classList.add("comp");
                 min=Math.min(val,min);
-            }
-        }
 
-        //最下位にクラス付与
-        if(columnNo==2&&min!=100){
-            for(let r = 0; r < table.rows.length-1; r++){
-                if(document.getElementById("tbody").rows[r].cells[2].textContent==min+'%')
-                    document.getElementById("tbody").rows[r].classList.add("worst");
+                if(val>first){
+                    third=second;
+                    second=first;
+                    first=val;
+                } else if (val>second) {
+                    third=second;
+                    second=val;
+                } else if (val>third) {
+                    third=val;
+                }
             }
         }
+        //最下位にクラス付与
+        if(columnNo==2){
+            for(let r = 0; r < table.rows.length-1; r++){
+                if(first!=-1&&document.getElementById("tbody").rows[r].cells[2].textContent==first+'%')
+                    document.getElementById("tbody").rows[r].classList.add("first");
+                if(second!=-1&&document.getElementById("tbody").rows[r].cells[2].textContent==second+'%')
+                    document.getElementById("tbody").rows[r].classList.add("second");
+                if(third!=-1&&document.getElementById("tbody").rows[r].cells[2].textContent==third+'%')
+                    document.getElementById("tbody").rows[r].classList.add("third");
+            }
+
+            if(min!=100) {
+                for(let r = 0; r < table.rows.length-1; r++){
+                    if(document.getElementById("tbody").rows[r].cells[2].textContent==min+'%')
+                        document.getElementById("tbody").rows[r].classList.add("worst");
+                }
+            }
+        }
+        
 
         if (columnNo === 0) { //ID
             sortArray.sort(compareNumber);
@@ -143,7 +172,9 @@ function initInfo(response){
             const targetId=this.parentNode.firstChild.textContent;
             const targetIndex=response.body.findIndex(item => item.user_id==targetId);
             //名前の取得
-            document.getElementById("modalHead").innerText=response.body[targetIndex].user_name;
+            document.getElementById("modalHead").innerHTML="<div>"+response.body[targetIndex].user_name+"</div>";
+            document.getElementById("modalHead").innerHTML+=
+            "<button onclick=\"location.href='../update?userID="+targetId+"'\" >詳細</button>";
             //詳細進捗の取得
             const tasks=response.body[targetIndex].tasks;
             let text="<ul>";
