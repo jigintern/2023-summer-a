@@ -51,7 +51,7 @@ document.getElementById("submit").onclick = async (event) => {
 
     // 認証情報が入ったファイル(PEMファイル)を保存
     await savePemFile();
-    location.href = "/show"; // リダイレクト
+    location.href = "/"; // リダイレクト
   } catch (err) {
     document.getElementById("error").innerText = err.message;
   }
