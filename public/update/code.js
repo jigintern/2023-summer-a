@@ -177,7 +177,7 @@ async function checkBoxChanged(taskNumber) {
 
     const res = await(await fetchWithDidFromLocalstorage(url, options)).json();
 
-    serverResponse.textContent = res;
+    //serverResponse.textContent = res;
 
     if(res.message)
     {
@@ -186,10 +186,6 @@ async function checkBoxChanged(taskNumber) {
         Init(userID);
         return;
     }
-  
-    // 更新結果を表示するエリアにメッセージを表示
-    const updateResult = document.getElementById('updateResult');
-    updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
 
     //保存していたjsonファイルの内容の書き換え
     userData.tasks.filter(task => task.id===taskNumber)[0].is_completed=newValue;
