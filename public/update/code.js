@@ -109,35 +109,51 @@ function clearTaskList(element) {
 }
 
 //タスクを作る関数
-function createTaskSet(task,isMine) {
-  const taskSet = document.createElement('div');
-  taskSet.classList.add('box'); 
-
-  const taskTitle = document.createElement('p');
-  taskTitle.classList.add('title');
-  taskTitle.textContent = `${task.id}: ${task.name}`;
-
-  if(isMine){
-    const newValue = document.createElement('input');
-    newValue.type = 'checkbox';
-    newValue.id = `cb${task.id}`;
-    newValue.required = true;
-    newValue.checked = task.is_completed;
-
-    const customCheckBox = document.createElement('label');
-    customCheckBox.setAttribute('for', `cb${task.id}`);
-    customCheckBox.classList.add('check-box');
-
-    taskSet.appendChild(newValue);
-    taskSet.appendChild(customCheckBox);
-
-    newValue.addEventListener('change', () => checkBoxChanged(task.id));
+//タスクを作る関数
+function createTaskSet(task, isMine) {
+    const box = document.createElement('div');
+    box.classList.add('box', 'pl-0');
+  
+    const columns = document.createElement('div');
+    columns.classList.add('columns', 'is-gapless');
+    box.appendChild(columns);
+  
+    // チェックボックス描画
+      // カラムの作成
+      const column = document.createElement('div');
+      column.classList.add('column', 'is-1', 'checkbox-container');
+      columns.appendChild(column);
+  
+      // チェックボックス用のinputとlabelの作成
+      const newValue = document.createElement('input');
+      newValue.type = 'checkbox';
+      newValue.id = `cb${task.id}`;
+      newValue.required = true;
+      newValue.disabled =!isMine;
+      newValue.checked = task.is_completed;
+  
+      const customCheckBox = document.createElement('label');
+      customCheckBox.setAttribute('for', `cb${task.id}`);
+      customCheckBox.classList.add('check-box');
+  
+      // input と label を column に追加する
+      column.appendChild(newValue);
+      column.appendChild(customCheckBox);
+  
+      newValue.addEventListener('change', () => checkBoxChanged(task.id));
+  
+    // タスク内容の描画
+    const subColumn = document.createElement('div');
+    subColumn.classList.add('column');
+    columns.appendChild(subColumn);
+  
+    const taskTitle = document.createElement('p');
+    taskTitle.classList.add('title');
+    taskTitle.textContent = `${task.name}`;
+    subColumn.appendChild(taskTitle);
+  
+    return (box);
   }
-
-  taskSet.appendChild(taskTitle);
-
-  return (taskSet);
-}
 
 //パラメーターを取得する関数
 function getParam(name, url) {

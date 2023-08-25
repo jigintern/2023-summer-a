@@ -8,6 +8,7 @@
     <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
     <link rel="stylesheet" type="text/css" href="/update/style.css" />
+    <link rel="icon" href="/img/min-pro.svg" />
   </head>
   <body>
 
@@ -15,8 +16,8 @@
     <div class="hero is-info is-bold">
       <div class="hero-body">
           <div class="container">
-             <h1 class="title">タスク更新</h1>
-             <h2 class="subtitle">ユーザー: <span id="userName"></span></h2>
+             <h1 class="is-size-2">タスク更新</h1>
+             <h2 class="is-size-4">ユーザー: <span id="userName"></span></h2>
           </div>
       </div>
    </div>
@@ -34,8 +35,8 @@
     <div class="container">
       <div id="notification" class="notification">
         <a href="/show" class="button is-link user-list-button is-pulled-right"><h3>ユーザー一覧へ</h3></a>
-        <h2 id="progressId" class="subtitle" style="margin-top: 20px;">進捗:<span id="progressValue"></span>%</h2>
-        <progress id="userProgress" class="progress is-primary is-pulled-center" max="100"></progress>
+        <h2 id="progressId" class="title" style="margin-top: 20px;">進捗:<span id="progressValue"></span>%</h2>
+        <progress id="userProgress" class="progress is-primary is-large" max="100"></progress>
       </div>
     </div>    
 
@@ -44,11 +45,11 @@
     <section class="section">
       <details id = "uncompletedtTask" open>
         <summary>未完了</summary>
-        <div id="uncompletedtTaskList" class="box"></div>
+        <div id="uncompletedtTaskList" class="box has-background"></div>
     </details>
       <details id = "completedtTask" open>
         <summary>完了済み</summary>
-          <div id="completedtTaskList" class="box"></div>
+          <div id="completedtTaskList" class="box has-background"></div>
     </details>
 </div>
 
