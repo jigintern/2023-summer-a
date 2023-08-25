@@ -1,0 +1,22 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g style="mix-blend-mode:screen">
+<rect x="10" y="79" width="45" height="25" rx="8" fill="white"/>
+<rect x="10" y="79" width="45" height="25" rx="8" fill="#4285F4"/>
+</g>
+<g style="mix-blend-mode:screen">
+<rect x="10" y="48" width="70" height="25" rx="8" fill="white"/>
+<rect x="10" y="48" width="70" height="25" rx="8" fill="#4285F4"/>
+</g>
+<g style="mix-blend-mode:screen">
+<rect x="10" y="17" width="100" height="25" rx="8" fill="white"/>
+<rect x="10" y="17" width="100" height="25" rx="8" fill="url(#paint0_linear_2_13)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_2_13" x1="10" y1="29" x2="110" y2="29" gradientUnits="userSpaceOnUse">
+<stop stop-color="#4285F4"/>
+<stop offset="0.322917" stop-color="#34A853"/>
+<stop offset="0.661458" stop-color="#FBBC05"/>
+<stop offset="1" stop-color="#EA4335"/>
+</linearGradient>
+</defs>
+</svg>

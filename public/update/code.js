@@ -51,11 +51,35 @@ async function fetchDataAndInit(){
             updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
         }
 
+        if (userData.completed === 100) {
+            addCompletedEffect();
+        } else {
+            removeCompletedEffect();
+        }
+
     }catch (error) {
         stopElement();
         console.error('エラー:', error);
         showErrorMessage(`エラー:${error}`);
     }
+}
+
+function addCompletedEffect() {
+    const body = document.querySelector('body');
+    const taskList = document.getElementById('completedtTaskList');
+    const not = document.getElementById('notification');
+    body.classList.add('is-success');
+    taskList.classList.add('is-success');
+    not.classList.add('is-success');
+}
+
+function removeCompletedEffect() {
+    const body = document.querySelector('body');
+    const taskList = document.getElementById('completedtTaskList');
+    const not = document.getElementById('notification');
+    body.classList.remove('is-success');
+    taskList.classList.remove('is-success');
+    not.classList.remove('is-success');
 }
 
 //タスクの初期化
@@ -80,6 +104,10 @@ function Init(accessUserId) {
     userNameElement.textContent = userData.user_name;
     userProgress.value = userData.completed;
     progressValue.textContent = String(userData.completed);
+
+    if (userData.completed === 100) {
+        addCompletedEffect();
+    }
 
     clearTaskList(completedtTaskList);
     clearTaskList(uncompletedtTaskList);

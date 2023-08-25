@@ -37,7 +37,7 @@ export const taskRouter = async (req: Request, taskController: TaskController) =
 
 	if (req.method === "POST" && pathname === "/tasks") {
 		const body = await taskController.getTasks();
-		console.log(body);
+		// console.log(body);
 		return new Response(JSON.stringify({access_user_id, body}), {
 			headers: {
 				"content-type": "application/json",

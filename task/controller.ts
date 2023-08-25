@@ -65,7 +65,7 @@ export class TaskControllerImpl implements TaskController{
 				};
 			}),
 		};
-		console.log(taskList);
+		// console.log(taskList);
 		return taskList;
 	}
 
