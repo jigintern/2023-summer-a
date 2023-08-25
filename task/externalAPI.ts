@@ -24,17 +24,9 @@ export const externalAPIRouter = async (req: Request) => {
 
   if (pathname === "/api/chat" && req.method === "POST") {
     const json = await req.json();
-    console.log(json);
-    const response = await fetchChat(json.message);
-    console.log("From ChatGPT API: " + response);
-    return new Response(JSON.stringify({ message: response }));
-  }
-
-  if (pathname === "/api/chat/praisemsg" && req.method === "POST") {
-    const prompt =
-      "あなたは小中学生の面倒を見るのが好きな，地元の寺子屋な学習支援員です．\n宿題を頑張った生徒たちに100文字程度でお褒めの言葉をいただきたいと思います．それでは，どうぞ！";
-    const response = await fetchChat(prompt);
-    console.log("From ChatGPT API: " + response);
+    console.log(json.prompt);
+    console.log("++++++++++++++++");
+    const response = await fetchChat(json.prompt);
     return new Response(JSON.stringify({ message: response }));
   }
 };

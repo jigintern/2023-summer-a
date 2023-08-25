@@ -12,6 +12,7 @@ body {
   
 button {
     padding: 10px 20px;
+    margin-right: 10px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -123,6 +124,8 @@ progress {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
 }
   
 #modalBody {
@@ -130,8 +133,10 @@ progress {
     line-height: 1.5;
     margin-left: 20px;
 }
+#modalHead div{
+    margin-right: auto;
+}
 
-/* .ornamental tr:nth-child(1) */
 .comp {
     color: white;
     text-shadow:
@@ -140,21 +145,38 @@ progress {
         0 0 0.2em blue;
     /* content: "\1F947" */
     background: linear-gradient(to right,#e60000,#f39800,#fff100,#009944,#0068b7,#1d2088,#920783,#e60000) 0 / 200%;
-    animation: 0.5s example5 linear infinite;
+    animation: 0.5s complete linear infinite;
 }
 
-@keyframes example5{
+@keyframes complete{
     100% { background-position: 200%; }
 }
 
-/*
-.ornamental tr:nth-child(2) td:nth-child(2):before{
-    content: "\1F948"
-}
-.ornamental tr:nth-child(3) td:nth-child(2):before{
+.third td:nth-child(2):before{
     content: "\1F949"
 }
-*/
+.second td:nth-child(2):before{
+    content: "\1F948"
+}
+.first td:nth-child(2):before{
+    content: "\1F947"
+}
 .worst td:nth-child(2):before{
     content: "\1F4A9"
+}
+
+#header {
+    display: flex;
+    align-items: center;
+}
+#update {
+    margin-right: auto;
+}
+
+#comment {
+    background-color: white;
+    max-width: calc(100%-135px);
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
