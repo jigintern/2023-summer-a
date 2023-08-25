@@ -1,3 +1,4 @@
+//Powered by ChatGPT API
 import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
 
 window.onload=load;
@@ -5,6 +6,8 @@ document.getElementById("load").onclick = load;
 
 async function gptComment(top, me) {
     const comment=document.getElementById("comment");
+    comment.classList.add("empty");
+
     comment.innerText="";    
     const message="あなたは小6のクラスを受け持つ担任です。彼の宿題の進捗に対してなにか、やる気が出るような面白い言葉を50文字程度でおねがいします。1位の進捗は"+top+"%で彼の進捗は"+me+"%です";
     const body={
@@ -14,8 +17,10 @@ async function gptComment(top, me) {
     console.log(body);
     const response=await fetchWithDidFromLocalstorage("/api/chat", body);
     const json=await response.json();
-    if(!json.message.includes('error'))
+    if(!json.message.includes('error')){
         comment.innerText=json.message;
+        comment.classList.remove("empty");
+    }
 }
 
 async function load(){

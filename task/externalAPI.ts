@@ -24,8 +24,6 @@ export const externalAPIRouter = async (req: Request) => {
 
   if (pathname === "/api/chat" && req.method === "POST") {
     const json = await req.json();
-    console.log(json.prompt);
-    console.log("++++++++++++++++");
     const response = await fetchChat(json.prompt);
     return new Response(JSON.stringify({ message: response }));
   }
