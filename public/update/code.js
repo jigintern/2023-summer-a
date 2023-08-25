@@ -56,6 +56,24 @@ async function fetchDataAndInit(){
     }
 }
 
+function addCompletedEffect() {
+    const body = document.querySelector('body');
+    const taskList = document.getElementById('completedtTaskList');
+    const not = document.getElementById('notification');
+    body.classList.add('is-success');
+    taskList.classList.add('is-success');
+    not.classList.add('is-success');
+}
+
+function removeCompletedEffect() {
+    const body = document.querySelector('body');
+    const taskList = document.getElementById('completedtTaskList');
+    const not = document.getElementById('notification');
+    body.classList.remove('is-success');
+    taskList.classList.remove('is-success');
+    not.classList.remove('is-success');
+}
+
 //タスクの初期化
 function Init(accessUserId) {
     
@@ -64,6 +82,10 @@ function Init(accessUserId) {
     userNameElement.textContent = userData.user_name;
     userProgress.value = userData.completed;
     progressValue.textContent = String(userData.completed);
+
+    if (userData.completed === 100) {
+        addCompletedEffect();
+    }
 
     clearTaskList(completedtTaskList);
     clearTaskList(uncompletedtTaskList);
@@ -154,7 +176,20 @@ async function checkBoxChanged(taskNumber) {
         Init(userID);
         return;
     }
+
+    const urlTasks = `/tasks/${userID}`;
+    const tasksOptions = {
+        method: "POST",
+    }
+
+    const userTasks = await (await fetchWithDidFromLocalstorage(urlTasks, tasksOptions)).json();
   
+    if (userTasks.body.completed === 100) {
+        addCompletedEffect();
+    } else {
+        removeCompletedEffect();
+    }
+
     // 更新結果を表示するエリアにメッセージを表示
     const updateResult = document.getElementById('updateResult');
     updateResult.textContent = `タスク "${taskContent}" の状態が変更されました。新しい値: ${newValue}`;
