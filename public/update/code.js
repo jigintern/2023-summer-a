@@ -10,6 +10,8 @@ const progressId=document.getElementById('progressId');
 const uncompletedtTask=document.getElementById('uncompletedtTask');
 const completedtTask=document.getElementById('completedtTask');
 const hideButton=document.getElementById('hideButton');
+const titleText=document.getElementById('titleText');
+const taskProcess=document.getElementById('taskProcess');
 
 const userID=getParam('userID');
 
@@ -61,6 +63,20 @@ function Init(accessUserId) {
     
     console.log(userData.tasks);
 
+    const isMine=Number(accessUserId)===Number(userData.user_id);
+
+    console.log(taskProcess);
+
+    if(isMine)
+    {
+        titleText.innerText="タスク更新";
+        taskProcess.innerText="タスク更新";
+    }else
+    {
+        titleText.innerText="タスク閲覧";
+        taskProcess.innerText="タスク閲覧";
+    }
+
     userNameElement.textContent = userData.user_name;
     userProgress.value = userData.completed;
     progressValue.textContent = String(userData.completed);
@@ -71,7 +87,7 @@ function Init(accessUserId) {
 
     // JSONデータからタスクを動的に生成
     userData.tasks.forEach((task) => {
-      const taskSet = createTaskSet(task,Number(accessUserId)===Number(userData.user_id));
+      const taskSet = createTaskSet(task,isMine);
       if(task.is_completed)
        completedtTaskList.appendChild(taskSet);
       else

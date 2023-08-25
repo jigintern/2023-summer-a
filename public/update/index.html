@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>タスク更新</title>
+    <title id="titleText">タスク更新</title>
 
     <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
@@ -15,7 +15,7 @@
     <div class="hero is-info is-bold">
       <div class="hero-body">
           <div class="container">
-             <h1 class="is-size-2">タスク更新</h1>
+             <h1 id ="taskProcess" class="is-size-2"></h1>
              <h2 class="is-size-4">ユーザー: <span id="userName"></span></h2>
           </div>
       </div>
@@ -31,12 +31,11 @@
       </div>
     </div>
     
+
     <div class="container">
-      <div class="notification">
-        <a href="/show" class="button is-link user-list-button is-pulled-right"><h3>ユーザー一覧へ</h3></a>
-        <h2 id="progressId" class="title" style="margin-top: 20px;">進捗:<span id="progressValue"></span>%</h2>
+      <br><a href="/show" class="button is-link user-list-button is-pulled-right"><h3>ユーザー一覧へ</h3></a>
+        <h2 id="progressId" class="is-size-2 has-text-centered">進捗:<span id="progressValue"></span>%</h2><br>
         <progress id="userProgress" class="progress is-primary is-large" max="100"></progress>
-      </div>
     </div>    
 
     <!-- タスク一覧の表示 -->
