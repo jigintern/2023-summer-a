@@ -49,6 +49,12 @@ async function fetchDataAndInit(){
             updateResult.textContent = `エラー:パラメーター{userID}が指定されていません`;
         }
 
+        if (userData.completed === 100) {
+            addCompletedEffect();
+        } else {
+            removeCompletedEffect();
+        }
+
     }catch (error) {
         stopElement();
         console.error('エラー:', error);
@@ -191,19 +197,6 @@ async function checkBoxChanged(taskNumber) {
         showErrorMessage(`データの取得に失敗しました :${res.message}`);
         Init(userID);
         return;
-    }
-
-    const urlTasks = `/tasks/${userID}`;
-    const tasksOptions = {
-        method: "POST",
-    }
-
-    const userTasks = await (await fetchWithDidFromLocalstorage(urlTasks, tasksOptions)).json();
-  
-    if (userTasks.body.completed === 100) {
-        addCompletedEffect();
-    } else {
-        removeCompletedEffect();
     }
 
     // 更新結果を表示するエリアにメッセージを表示
