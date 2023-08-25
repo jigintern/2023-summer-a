@@ -3,18 +3,24 @@ import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
 window.onload=load;
 document.getElementById("load").onclick = load;
 
-const getPraiseMessage = async () => {
-    const res = await fetchWithDidFromLocalstorage("/api/chat/praisemsg", {method: "POST"});
-    const json = await res.json();
-    return json.message; // -> String
-};
+async function gptComment(top, me) {
+    const comment=document.getElementById("comment");
+    comment.classList.add("empty");
 
-const praiseMessageTest = async () => {
-    const resStr = await getPraiseMessage();
-    console.log(resStr);
+    comment.innerText="";    
+    const message="あなたは小6のクラスを受け持つ担任です。彼の宿題の進捗に対してなにか、やる気が出るような面白い言葉を50文字程度でおねがいします。1位の進捗は"+top+"%で彼の進捗は"+me+"%です";
+    const body={
+        method: "POST",
+        prompt:message
+    }
+    console.log(body);
+    const response=await fetchWithDidFromLocalstorage("/api/chat", body);
+    const json=await response.json();
+    if(!json.message.includes('error')){
+        comment.innerText=json.message;
+        comment.classList.remove("empty");
+    }
 }
-
-// praiseMessageTest(); // 実装例
 
 async function load(){
     const response = await fetchWithDidFromLocalstorage('/tasks', {method: "POST"});
@@ -59,6 +65,7 @@ async function load(){
     tbody+="</tr>";
     
     //自分以外
+    let top=list[id-startId].completed;
     for(let i=0; i<list.length; ++i){
         if(id-startId===i) continue;
         tbody+="<tr>";
@@ -66,10 +73,11 @@ async function load(){
         "<td>"+list[i].user_name+"</td>"+
         "<td><div>"+list[i].completed+"%"+"<progress max=\"100\" value="+list[i].completed+"></progress></div></td>";
         tbody+="</tr>";
+        top=Math.max(top, list[i].completed);
     }
     document.getElementById("tbody").innerHTML=tbody;
-    document.getElementById("tbody").classList.remove("ornamental");
     initInfo(json);
+    gptComment(top,list[id-startId].completed);
 }
 
 //ソート用
@@ -87,11 +95,9 @@ document.querySelectorAll('th').forEach(elm => {
         //装飾用クラス削除
         document.querySelectorAll('.comp').forEach(elm => {elm.classList.remove("comp")});
         document.querySelectorAll('.worst').forEach(elm => {elm.classList.remove("worst")});
-        tbody.classList.remove("ornamental");
         document.querySelectorAll('.first').forEach(elm => {elm.classList.remove("first")});
         document.querySelectorAll('.second').forEach(elm => {elm.classList.remove("second")});
         document.querySelectorAll('.third').forEach(elm => {elm.classList.remove("third")});
-
 
         for (let r = 1; r < table.rows.length; r++) {
             //行番号と値を配列に格納
@@ -145,7 +151,6 @@ document.querySelectorAll('th').forEach(elm => {
             sortArray.sort(compareString);
         } else { //%
             sortArray.sort(comparePercentDesc);
-            tbody.classList.add("ornamental");
         }
         //ソート後のTRオブジェクトを順番にtbodyへ追加（移動）
         for (let i = 0; i < sortArray.length; i++) {
