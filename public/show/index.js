@@ -3,6 +3,19 @@ import { fetchWithDidFromLocalstorage } from "/lib/fetch.js";
 window.onload=load;
 document.getElementById("load").onclick = load;
 
+const getPraiseMessage = async () => {
+    const res = await fetchWithDidFromLocalstorage("/api/chat/praisemsg", {method: "POST"});
+    const json = await res.json();
+    return json.message; // -> String
+};
+
+const praiseMessageTest = async () => {
+    const resStr = await getPraiseMessage();
+    console.log(resStr);
+}
+
+// praiseMessageTest(); // 実装例
+
 async function load(){
     const response = await fetchWithDidFromLocalstorage('/tasks', {method: "POST"});
     const json = await response.json();
